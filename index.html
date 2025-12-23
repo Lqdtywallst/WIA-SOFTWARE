@@ -130,7 +130,22 @@
     .hero-content {
       position: relative;
       z-index: 2;
-      max-width: 1100px;
+      max-width: 1400px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem;
+      align-items: center;
+    }
+
+    .hero-text {
+      position: relative;
+    }
+
+    @media (max-width: 1200px) {
+      .hero-content {
+        grid-template-columns: 1fr;
+        gap: 3rem;
+      }
     }
 
     .hero h1 {
@@ -394,11 +409,114 @@
       transform: translateY(-2px);
     }
 
+    .trading-chart {
+      position: relative;
+      width: 100%;
+      height: 500px;
+      background: rgba(0,240,255,0.03);
+      border: 1px solid rgba(0,240,255,0.2);
+      border-radius: 8px;
+      padding: 2rem;
+      overflow: hidden;
+    }
+
+    .chart-container {
+      width: 100%;
+      height: 100%;
+      position: relative;
+    }
+
+    .chart-line {
+      fill: none;
+      stroke-width: 2;
+      filter: drop-shadow(0 0 8px currentColor);
+    }
+
+    .chart-line.price {
+      stroke: var(--neon-blue);
+      stroke-width: 3;
+    }
+
+    .chart-line.rsi {
+      stroke: var(--neon-purple);
+      stroke-width: 2;
+      opacity: 0.8;
+    }
+
+    .chart-line.macd {
+      stroke: var(--neon-green);
+      stroke-width: 2;
+      opacity: 0.8;
+    }
+
+    .chart-grid {
+      stroke: rgba(0,240,255,0.1);
+      stroke-width: 1;
+    }
+
+    .chart-bubble {
+      position: absolute;
+      border-radius: 50%;
+      pointer-events: none;
+      filter: blur(1px);
+      animation: bubbleFloat 3s ease-in-out infinite;
+    }
+
+    .bubble-blue {
+      background: radial-gradient(circle, rgba(0,240,255,0.6), rgba(0,240,255,0));
+      box-shadow: 0 0 20px var(--neon-blue);
+    }
+
+    .bubble-purple {
+      background: radial-gradient(circle, rgba(195,0,255,0.6), rgba(195,0,255,0));
+      box-shadow: 0 0 20px var(--neon-purple);
+    }
+
+    .bubble-green {
+      background: radial-gradient(circle, rgba(57,255,20,0.6), rgba(57,255,20,0));
+      box-shadow: 0 0 20px var(--neon-green);
+    }
+
+    @keyframes bubbleFloat {
+      0%, 100% {
+        transform: translateY(0) scale(1);
+        opacity: 0.6;
+      }
+      50% {
+        transform: translateY(-20px) scale(1.2);
+        opacity: 1;
+      }
+    }
+
+    .chart-indicator {
+      position: absolute;
+      font-family: 'Roboto Mono', monospace;
+      font-size: 0.75rem;
+      color: var(--neon-blue);
+      text-shadow: 0 0 10px var(--neon-blue);
+      animation: pulse 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 0.7; }
+      50% { opacity: 1; }
+    }
+
+    .chart-label {
+      position: absolute;
+      font-family: 'Orbitron', sans-serif;
+      font-size: 0.7rem;
+      color: var(--text-dim);
+      text-transform: uppercase;
+      letter-spacing: 2px;
+    }
+
     @media (max-width: 900px) {
       .nav-links { display: flex; flex-wrap: wrap; justify-content: center; gap: 1.5rem; margin-top: 1rem; }
       .nav-links a { margin: 0; }
       .hero h1 { font-size: 4.8rem; }
       .lang-toggle { top: 1rem; right: 2vw; padding: 0.5rem 1rem; font-size: 0.75rem; }
+      .trading-chart { height: 350px; }
     }
   </style>
 </head>
@@ -422,12 +540,70 @@
 <section id="inicio" class="hero">
   <div class="container">
     <div class="hero-content">
-      <h1>EXECUTION LAYER<br>REDEFINED</h1>
-      <p class="subtitle" data-lang-es="Infraestructura algorítmica de próxima generación. Bots de alta frecuencia. Plataformas cuantitativas. Latencia sub-milisegundo. Cero excusas." data-lang-en="Next-generation algorithmic infrastructure. High-frequency bots. Quantitative platforms. Sub-millisecond latency. No excuses.">Infraestructura algorítmica de próxima generación. Bots de alta frecuencia. Plataformas cuantitativas. Latencia sub-milisegundo. Cero excusas.</p>
+      <div class="hero-text">
+        <h1>EXECUTION LAYER<br>REDEFINED</h1>
+        <p class="subtitle" data-lang-es="Infraestructura algorítmica de próxima generación. Bots de alta frecuencia. Plataformas cuantitativas. Latencia sub-milisegundo. Cero excusas." data-lang-en="Next-generation algorithmic infrastructure. High-frequency bots. Quantitative platforms. Sub-millisecond latency. No excuses.">Infraestructura algorítmica de próxima generación. Bots de alta frecuencia. Plataformas cuantitativas. Latencia sub-milisegundo. Cero excusas.</p>
+        
+        <div style="margin-top: 4rem; display:flex; gap:2rem; flex-wrap:wrap;">
+          <a href="#contact" class="btn-neon" data-lang-es="SOLICITAR ACCESO" data-lang-en="REQUEST ACCESS">SOLICITAR ACCESO</a>
+          <a href="#systems" class="btn-neon purple" data-lang-es="VER SISTEMAS" data-lang-en="VIEW SYSTEMS">VER SISTEMAS</a>
+        </div>
+      </div>
       
-      <div style="margin-top: 4rem; display:flex; gap:2rem; flex-wrap:wrap;">
-        <a href="#contact" class="btn-neon" data-lang-es="SOLICITAR ACCESO" data-lang-en="REQUEST ACCESS">SOLICITAR ACCESO</a>
-        <a href="#systems" class="btn-neon purple" data-lang-es="VER SISTEMAS" data-lang-en="VIEW SYSTEMS">VER SISTEMAS</a>
+      <div class="trading-chart">
+        <div class="chart-container" id="tradingChart">
+          <svg width="100%" height="100%" viewBox="0 0 600 400" preserveAspectRatio="none">
+            <!-- Grid lines -->
+            <defs>
+              <linearGradient id="priceGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%" style="stop-color:rgba(0,240,255,0.3);stop-opacity:1" />
+                <stop offset="100%" style="stop-color:rgba(0,240,255,0);stop-opacity:0" />
+              </linearGradient>
+            </defs>
+            
+            <!-- Grid -->
+            <line class="chart-grid" x1="0" y1="80" x2="600" y2="80"/>
+            <line class="chart-grid" x1="0" y1="160" x2="600" y2="160"/>
+            <line class="chart-grid" x1="0" y1="240" x2="600" y2="240"/>
+            <line class="chart-grid" x1="0" y1="320" x2="600" y2="320"/>
+            
+            <!-- Price line (animated) -->
+            <path class="chart-line price" id="priceLine" d="M0,200 L150,180 L300,160 L450,140 L600,120"/>
+            <path id="priceFill" fill="url(#priceGradient)" opacity="0.3"/>
+            
+            <!-- RSI indicator -->
+            <path class="chart-line rsi" id="rsiLine" d="M0,350 L150,320 L300,280 L450,260 L600,240"/>
+            
+            <!-- MACD indicator -->
+            <path class="chart-line macd" id="macdLine" d="M0,380 L150,360 L300,340 L450,350 L600,360"/>
+            
+            <!-- Volume bars (animated) -->
+            <rect x="50" y="300" width="40" height="60" fill="rgba(0,240,255,0.4)" class="volume-bar"/>
+            <rect x="150" y="280" width="40" height="80" fill="rgba(0,240,255,0.4)" class="volume-bar"/>
+            <rect x="250" y="260" width="40" height="100" fill="rgba(0,240,255,0.4)" class="volume-bar"/>
+            <rect x="350" y="240" width="40" height="120" fill="rgba(0,240,255,0.4)" class="volume-bar"/>
+            <rect x="450" y="220" width="40" height="140" fill="rgba(0,240,255,0.4)" class="volume-bar"/>
+            <rect x="550" y="200" width="40" height="160" fill="rgba(0,240,255,0.4)" class="volume-bar"/>
+          </svg>
+          
+          <!-- Animated bubbles -->
+          <div class="chart-bubble bubble-blue" style="width: 30px; height: 30px; top: 20%; left: 15%; animation-delay: 0s;"></div>
+          <div class="chart-bubble bubble-purple" style="width: 25px; height: 25px; top: 45%; left: 35%; animation-delay: 0.5s;"></div>
+          <div class="chart-bubble bubble-green" style="width: 35px; height: 35px; top: 30%; left: 55%; animation-delay: 1s;"></div>
+          <div class="chart-bubble bubble-blue" style="width: 20px; height: 20px; top: 60%; left: 70%; animation-delay: 1.5s;"></div>
+          <div class="chart-bubble bubble-purple" style="width: 28px; height: 28px; top: 25%; left: 80%; animation-delay: 2s;"></div>
+          
+          <!-- Indicators labels -->
+          <div class="chart-label" style="top: 10px; left: 20px;">PRICE</div>
+          <div class="chart-label" style="top: 10px; right: 20px;">RSI: 68</div>
+          <div class="chart-label" style="bottom: 10px; left: 20px;">MACD</div>
+          <div class="chart-label" style="bottom: 10px; right: 20px;">VOLUME</div>
+          
+          <!-- Live indicators -->
+          <div class="chart-indicator" style="top: 50px; right: 30px;">▲ +2.4%</div>
+          <div class="chart-indicator" style="top: 80px; right: 30px; color: var(--neon-purple);">RSI: 68</div>
+          <div class="chart-indicator" style="top: 110px; right: 30px; color: var(--neon-green);">MACD: +</div>
+        </div>
       </div>
     </div>
   </div>
@@ -641,6 +817,108 @@
     // Scroll suave al mensaje de éxito
     successMsg.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
   }
+
+  // Trading Chart Animation
+  function animateChart() {
+    const priceLine = document.getElementById('priceLine');
+    const rsiLine = document.getElementById('rsiLine');
+    const macdLine = document.getElementById('macdLine');
+    const volumeBars = document.querySelectorAll('.volume-bar');
+    
+    // Generate random price data points
+    function generatePricePath() {
+      let path = 'M0,200';
+      let y = 200;
+      for (let x = 50; x <= 600; x += 50) {
+        y += (Math.random() - 0.5) * 30;
+        y = Math.max(100, Math.min(300, y)); // Keep within bounds
+        path += ` L${x},${y}`;
+      }
+      return path;
+    }
+    
+    function generateRSIPath() {
+      let path = 'M0,350';
+      let y = 350;
+      for (let x = 50; x <= 600; x += 50) {
+        y += (Math.random() - 0.5) * 20;
+        y = Math.max(240, Math.min(380, y));
+        path += ` L${x},${y}`;
+      }
+      return path;
+    }
+    
+    function generateMACDPath() {
+      let path = 'M0,380';
+      let y = 380;
+      for (let x = 50; x <= 600; x += 50) {
+        y += (Math.random() - 0.5) * 15;
+        y = Math.max(360, Math.min(390, y));
+        path += ` L${x},${y}`;
+      }
+      return path;
+    }
+    
+    // Animate price line
+    function updatePriceLine() {
+      const newPath = generatePricePath();
+      priceLine.setAttribute('d', newPath);
+      
+      // Add gradient fill area
+      const fillPath = document.getElementById('priceFill');
+      if (fillPath) {
+        const fillArea = newPath + ` L600,400 L0,400 Z`;
+        fillPath.setAttribute('d', fillArea);
+      }
+    }
+    
+    // Animate volume bars
+    function updateVolumeBars() {
+      volumeBars.forEach((bar, index) => {
+        const height = 60 + Math.random() * 100;
+        const y = 400 - height;
+        bar.setAttribute('y', y);
+        bar.setAttribute('height', height);
+        bar.style.opacity = 0.3 + Math.random() * 0.4;
+      });
+    }
+    
+    // Update indicators
+    function updateIndicators() {
+      const rsiValue = Math.floor(50 + Math.random() * 30);
+      const macdValue = (Math.random() - 0.5) * 2;
+      const priceChange = (Math.random() - 0.3) * 5;
+      
+      const indicators = document.querySelectorAll('.chart-indicator');
+      if (indicators.length >= 3) {
+        indicators[0].textContent = priceChange > 0 ? `▲ +${priceChange.toFixed(2)}%` : `▼ ${priceChange.toFixed(2)}%`;
+        indicators[0].style.color = priceChange > 0 ? 'var(--neon-green)' : 'var(--neon-purple)';
+        indicators[1].textContent = `RSI: ${rsiValue}`;
+        indicators[2].textContent = `MACD: ${macdValue > 0 ? '+' : ''}${macdValue.toFixed(2)}`;
+      }
+    }
+    
+    // Initial animation
+    updatePriceLine();
+    rsiLine.setAttribute('d', generateRSIPath());
+    macdLine.setAttribute('d', generateMACDPath());
+    updateVolumeBars();
+    updateIndicators();
+    
+    // Animate continuously
+    setInterval(() => {
+      updatePriceLine();
+      rsiLine.setAttribute('d', generateRSIPath());
+      macdLine.setAttribute('d', generateMACDPath());
+      updateVolumeBars();
+      updateIndicators();
+    }, 2000);
+  }
+  
+  // Initialize chart animation when page loads
+  window.addEventListener('load', () => {
+    setTimeout(animateChart, 500);
+  });
 </script>
 
 </body>
