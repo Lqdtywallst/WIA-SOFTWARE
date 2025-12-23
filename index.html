@@ -413,102 +413,187 @@
       position: relative;
       width: 100%;
       height: 500px;
-      background: rgba(0,240,255,0.03);
-      border: 1px solid rgba(0,240,255,0.2);
+      background: radial-gradient(circle at 0 0, rgba(0,240,255,0.18), transparent 55%),
+                  radial-gradient(circle at 100% 100%, rgba(195,0,255,0.12), transparent 60%),
+                  rgba(0,0,0,0.85);
+      border: 1px solid rgba(0,240,255,0.25);
       border-radius: 8px;
-      padding: 2rem;
+      padding: 2rem 2.5rem;
       overflow: hidden;
+      box-shadow: 0 0 40px rgba(0,240,255,0.25);
     }
 
     .chart-container {
+      position: relative;
       width: 100%;
       height: 100%;
+      display: grid;
+      grid-template-columns: 40px 1fr;
+      grid-template-rows: 1fr 40px;
+      gap: 0.5rem;
+    }
+
+    .bookmap-heatmap {
       position: relative;
+      grid-column: 2 / 3;
+      grid-row: 1 / 2;
+      display: grid;
+      grid-template-columns: repeat(40, 1fr);
+      grid-template-rows: repeat(20, 1fr);
+      background: radial-gradient(circle at 50% 0, rgba(15,23,42,0.9), rgba(0,0,0,0.95));
+      border-radius: 4px;
+      overflow: hidden;
     }
 
-    .chart-line {
-      fill: none;
-      stroke-width: 2;
-      filter: drop-shadow(0 0 8px currentColor);
+    .bookmap-cell {
+      width: 100%;
+      height: 100%;
+      transition: background-color 0.25s ease-out;
     }
 
-    .chart-line.price {
-      stroke: var(--neon-blue);
-      stroke-width: 3;
-    }
-
-    .chart-line.rsi {
-      stroke: var(--neon-purple);
-      stroke-width: 2;
-      opacity: 0.8;
-    }
-
-    .chart-line.macd {
-      stroke: var(--neon-green);
-      stroke-width: 2;
-      opacity: 0.8;
-    }
-
-    .chart-grid {
-      stroke: rgba(0,240,255,0.1);
-      stroke-width: 1;
-    }
-
-    .chart-bubble {
+    .bookmap-bubble {
       position: absolute;
       border-radius: 50%;
       pointer-events: none;
       filter: blur(1px);
-      animation: bubbleFloat 3s ease-in-out infinite;
+      mix-blend-mode: screen;
+      opacity: 0.7;
+      animation: bubbleFloat 2.8s ease-in-out infinite;
     }
 
-    .bubble-blue {
-      background: radial-gradient(circle, rgba(0,240,255,0.6), rgba(0,240,255,0));
-      box-shadow: 0 0 20px var(--neon-blue);
+    .bubble-bid {
+      background: radial-gradient(circle, rgba(0,240,255,0.85), rgba(0,240,255,0));
+      box-shadow: 0 0 20px rgba(0,240,255,0.9);
     }
 
-    .bubble-purple {
-      background: radial-gradient(circle, rgba(195,0,255,0.6), rgba(195,0,255,0));
-      box-shadow: 0 0 20px var(--neon-purple);
+    .bubble-ask {
+      background: radial-gradient(circle, rgba(195,0,255,0.85), rgba(195,0,255,0));
+      box-shadow: 0 0 20px rgba(195,0,255,0.9);
     }
 
-    .bubble-green {
-      background: radial-gradient(circle, rgba(57,255,20,0.6), rgba(57,255,20,0));
-      box-shadow: 0 0 20px var(--neon-green);
+    .bubble-trade {
+      background: radial-gradient(circle, rgba(57,255,20,0.9), rgba(57,255,20,0));
+      box-shadow: 0 0 22px rgba(57,255,20,0.95);
     }
 
     @keyframes bubbleFloat {
       0%, 100% {
         transform: translateY(0) scale(1);
-        opacity: 0.6;
+        opacity: 0.5;
       }
       50% {
-        transform: translateY(-20px) scale(1.2);
+        transform: translateY(-10px) scale(1.15);
         opacity: 1;
       }
     }
 
-    .chart-indicator {
-      position: absolute;
+    .bookmap-price-axis {
+      grid-column: 1 / 2;
+      grid-row: 1 / 2;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 0.4rem 0;
+    }
+
+    .price-level {
       font-family: 'Roboto Mono', monospace;
-      font-size: 0.75rem;
-      color: var(--neon-blue);
-      text-shadow: 0 0 10px var(--neon-blue);
-      animation: pulse 2s ease-in-out infinite;
+      font-size: 0.7rem;
+      color: rgba(148, 163, 184, 0.9);
+      text-align: right;
+      padding-right: 0.1rem;
     }
 
-    @keyframes pulse {
-      0%, 100% { opacity: 0.7; }
-      50% { opacity: 1; }
+    .bookmap-time-axis {
+      grid-column: 2 / 3;
+      grid-row: 2 / 3;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 0.3rem;
+      font-family: 'Roboto Mono', monospace;
+      font-size: 0.65rem;
+      color: rgba(148, 163, 184, 0.9);
     }
 
-    .chart-label {
+    .bookmap-overlay {
       position: absolute;
-      font-family: 'Orbitron', sans-serif;
+      inset: 0;
+      pointer-events: none;
+      border: 1px solid rgba(148, 163, 184, 0.14);
+      box-shadow: inset 0 0 25px rgba(15,23,42,0.9);
+    }
+
+    .bookmap-midline {
+      position: absolute;
+      left: 0;
+      right: 0;
+      height: 1px;
+      top: 50%;
+      background: linear-gradient(90deg, transparent, rgba(0,240,255,0.8), transparent);
+      opacity: 0.7;
+    }
+
+    .bookmap-best-bid,
+    .bookmap-best-ask {
+      position: absolute;
+      left: 0;
+      right: 0;
+      height: 1px;
+    }
+
+    .bookmap-best-bid {
+      background: linear-gradient(90deg, transparent, rgba(0,240,255,0.9), transparent);
+      box-shadow: 0 0 10px rgba(0,240,255,0.8);
+    }
+
+    .bookmap-best-ask {
+      background: linear-gradient(90deg, transparent, rgba(195,0,255,0.9), transparent);
+      box-shadow: 0 0 10px rgba(195,0,255,0.8);
+    }
+
+    .bookmap-legend {
+      position: absolute;
+      top: 1rem;
+      right: 1.2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.3rem;
+      font-family: 'Roboto Mono', monospace;
       font-size: 0.7rem;
       color: var(--text-dim);
-      text-transform: uppercase;
-      letter-spacing: 2px;
+      text-align: right;
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      justify-content: flex-end;
+    }
+
+    .legend-color {
+      width: 14px;
+      height: 8px;
+      border-radius: 999px;
+      box-shadow: 0 0 10px currentColor;
+    }
+
+    .legend-color.bid {
+      background: linear-gradient(90deg, rgba(15,118,255,0.1), rgba(56,189,248,1));
+      color: rgba(56,189,248,1);
+    }
+
+    .legend-color.ask {
+      background: linear-gradient(90deg, rgba(168,85,247,0.1), rgba(236,72,153,1));
+      color: rgba(236,72,153,1);
+    }
+
+    .legend-color.trade {
+      background: linear-gradient(90deg, rgba(22,163,74,0.1), rgba(74,222,128,1));
+      color: rgba(74,222,128,1);
     }
 
     @media (max-width: 900px) {
@@ -516,7 +601,7 @@
       .nav-links a { margin: 0; }
       .hero h1 { font-size: 4.8rem; }
       .lang-toggle { top: 1rem; right: 2vw; padding: 0.5rem 1rem; font-size: 0.75rem; }
-      .trading-chart { height: 350px; }
+      .trading-chart { height: 380px; padding: 1.4rem; }
     }
   </style>
 </head>
@@ -552,57 +637,30 @@
       
       <div class="trading-chart">
         <div class="chart-container" id="tradingChart">
-          <svg width="100%" height="100%" viewBox="0 0 600 400" preserveAspectRatio="none">
-            <!-- Grid lines -->
-            <defs>
-              <linearGradient id="priceGradient" x1="0%" y1="0%" x2="0%" y2="100%">
-                <stop offset="0%" style="stop-color:rgba(0,240,255,0.3);stop-opacity:1" />
-                <stop offset="100%" style="stop-color:rgba(0,240,255,0);stop-opacity:0" />
-              </linearGradient>
-            </defs>
-            
-            <!-- Grid -->
-            <line class="chart-grid" x1="0" y1="80" x2="600" y2="80"/>
-            <line class="chart-grid" x1="0" y1="160" x2="600" y2="160"/>
-            <line class="chart-grid" x1="0" y1="240" x2="600" y2="240"/>
-            <line class="chart-grid" x1="0" y1="320" x2="600" y2="320"/>
-            
-            <!-- Price line (animated) -->
-            <path class="chart-line price" id="priceLine" d="M0,200 L150,180 L300,160 L450,140 L600,120"/>
-            <path id="priceFill" fill="url(#priceGradient)" opacity="0.3"/>
-            
-            <!-- RSI indicator -->
-            <path class="chart-line rsi" id="rsiLine" d="M0,350 L150,320 L300,280 L450,260 L600,240"/>
-            
-            <!-- MACD indicator -->
-            <path class="chart-line macd" id="macdLine" d="M0,380 L150,360 L300,340 L450,350 L600,360"/>
-            
-            <!-- Volume bars (animated) -->
-            <rect x="50" y="300" width="40" height="60" fill="rgba(0,240,255,0.4)" class="volume-bar"/>
-            <rect x="150" y="280" width="40" height="80" fill="rgba(0,240,255,0.4)" class="volume-bar"/>
-            <rect x="250" y="260" width="40" height="100" fill="rgba(0,240,255,0.4)" class="volume-bar"/>
-            <rect x="350" y="240" width="40" height="120" fill="rgba(0,240,255,0.4)" class="volume-bar"/>
-            <rect x="450" y="220" width="40" height="140" fill="rgba(0,240,255,0.4)" class="volume-bar"/>
-            <rect x="550" y="200" width="40" height="160" fill="rgba(0,240,255,0.4)" class="volume-bar"/>
-          </svg>
-          
-          <!-- Animated bubbles -->
-          <div class="chart-bubble bubble-blue" style="width: 30px; height: 30px; top: 20%; left: 15%; animation-delay: 0s;"></div>
-          <div class="chart-bubble bubble-purple" style="width: 25px; height: 25px; top: 45%; left: 35%; animation-delay: 0.5s;"></div>
-          <div class="chart-bubble bubble-green" style="width: 35px; height: 35px; top: 30%; left: 55%; animation-delay: 1s;"></div>
-          <div class="chart-bubble bubble-blue" style="width: 20px; height: 20px; top: 60%; left: 70%; animation-delay: 1.5s;"></div>
-          <div class="chart-bubble bubble-purple" style="width: 28px; height: 28px; top: 25%; left: 80%; animation-delay: 2s;"></div>
-          
-          <!-- Indicators labels -->
-          <div class="chart-label" style="top: 10px; left: 20px;">PRICE</div>
-          <div class="chart-label" style="top: 10px; right: 20px;">RSI: 68</div>
-          <div class="chart-label" style="bottom: 10px; left: 20px;">MACD</div>
-          <div class="chart-label" style="bottom: 10px; right: 20px;">VOLUME</div>
-          
-          <!-- Live indicators -->
-          <div class="chart-indicator" style="top: 50px; right: 30px;">▲ +2.4%</div>
-          <div class="chart-indicator" style="top: 80px; right: 30px; color: var(--neon-purple);">RSI: 68</div>
-          <div class="chart-indicator" style="top: 110px; right: 30px; color: var(--neon-green);">MACD: +</div>
+          <div class="bookmap-price-axis" id="bookmapPriceAxis"></div>
+          <div class="bookmap-heatmap" id="bookmapHeatmap"></div>
+          <div class="bookmap-time-axis" id="bookmapTimeAxis"></div>
+
+          <div class="bookmap-overlay">
+            <div class="bookmap-midline"></div>
+            <div class="bookmap-best-bid" id="bestBidLine"></div>
+            <div class="bookmap-best-ask" id="bestAskLine"></div>
+          </div>
+
+          <div class="bookmap-legend">
+            <div class="legend-item">
+              <span class="legend-color bid"></span>
+              <span>BID LIQUIDITY</span>
+            </div>
+            <div class="legend-item">
+              <span class="legend-color ask"></span>
+              <span>ASK LIQUIDITY</span>
+            </div>
+            <div class="legend-item">
+              <span class="legend-color trade"></span>
+              <span>AGGRESSIVE TRADES</span>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -818,106 +876,125 @@
     successMsg.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
   }
 
-  // Trading Chart Animation
-  function animateChart() {
-    const priceLine = document.getElementById('priceLine');
-    const rsiLine = document.getElementById('rsiLine');
-    const macdLine = document.getElementById('macdLine');
-    const volumeBars = document.querySelectorAll('.volume-bar');
-    
-    // Generate random price data points
-    function generatePricePath() {
-      let path = 'M0,200';
-      let y = 200;
-      for (let x = 50; x <= 600; x += 50) {
-        y += (Math.random() - 0.5) * 30;
-        y = Math.max(100, Math.min(300, y)); // Keep within bounds
-        path += ` L${x},${y}`;
-      }
-      return path;
+  // Bookmap-style Heatmap Animation
+  function initBookmap() {
+    const rows = 20;
+    const cols = 40;
+    const heatmap = document.getElementById('bookmapHeatmap');
+    const priceAxis = document.getElementById('bookmapPriceAxis');
+    const timeAxis = document.getElementById('bookmapTimeAxis');
+    const bestBidLine = document.getElementById('bestBidLine');
+    const bestAskLine = document.getElementById('bestAskLine');
+
+    if (!heatmap || !priceAxis || !timeAxis) return;
+
+    // Price levels (dummy)
+    const midPrice = 42000;
+    const tickSize = 10;
+
+    for (let i = 0; i < rows; i++) {
+      const level = document.createElement('div');
+      const price = midPrice + (rows / 2 - i) * tickSize;
+      level.className = 'price-level';
+      level.textContent = price.toLocaleString('en-US', { maximumFractionDigits: 0 });
+      priceAxis.appendChild(level);
     }
-    
-    function generateRSIPath() {
-      let path = 'M0,350';
-      let y = 350;
-      for (let x = 50; x <= 600; x += 50) {
-        y += (Math.random() - 0.5) * 20;
-        y = Math.max(240, Math.min(380, y));
-        path += ` L${x},${y}`;
-      }
-      return path;
+
+    // Time axis
+    for (let i = 0; i < 6; i++) {
+      const t = document.createElement('div');
+      t.textContent = `T-${(6 - i) * 5}s`;
+      timeAxis.appendChild(t);
     }
-    
-    function generateMACDPath() {
-      let path = 'M0,380';
-      let y = 380;
-      for (let x = 50; x <= 600; x += 50) {
-        y += (Math.random() - 0.5) * 15;
-        y = Math.max(360, Math.min(390, y));
-        path += ` L${x},${y}`;
-      }
-      return path;
-    }
-    
-    // Animate price line
-    function updatePriceLine() {
-      const newPath = generatePricePath();
-      priceLine.setAttribute('d', newPath);
-      
-      // Add gradient fill area
-      const fillPath = document.getElementById('priceFill');
-      if (fillPath) {
-        const fillArea = newPath + ` L600,400 L0,400 Z`;
-        fillPath.setAttribute('d', fillArea);
+
+    // Create heatmap cells
+    const cells = [];
+    for (let r = 0; r < rows; r++) {
+      cells[r] = [];
+      for (let c = 0; c < cols; c++) {
+        const cell = document.createElement('div');
+        cell.className = 'bookmap-cell';
+        heatmap.appendChild(cell);
+        cells[r][c] = cell;
       }
     }
-    
-    // Animate volume bars
-    function updateVolumeBars() {
-      volumeBars.forEach((bar, index) => {
-        const height = 60 + Math.random() * 100;
-        const y = 400 - height;
-        bar.setAttribute('y', y);
-        bar.setAttribute('height', height);
-        bar.style.opacity = 0.3 + Math.random() * 0.4;
-      });
-    }
-    
-    // Update indicators
-    function updateIndicators() {
-      const rsiValue = Math.floor(50 + Math.random() * 30);
-      const macdValue = (Math.random() - 0.5) * 2;
-      const priceChange = (Math.random() - 0.3) * 5;
-      
-      const indicators = document.querySelectorAll('.chart-indicator');
-      if (indicators.length >= 3) {
-        indicators[0].textContent = priceChange > 0 ? `▲ +${priceChange.toFixed(2)}%` : `▼ ${priceChange.toFixed(2)}%`;
-        indicators[0].style.color = priceChange > 0 ? 'var(--neon-green)' : 'var(--neon-purple)';
-        indicators[1].textContent = `RSI: ${rsiValue}`;
-        indicators[2].textContent = `MACD: ${macdValue > 0 ? '+' : ''}${macdValue.toFixed(2)}`;
+
+    function colorForIntensity(i, isBid) {
+      // i: 0..1
+      const clamped = Math.max(0, Math.min(1, i));
+      const alpha = 0.05 + clamped * 0.9;
+      if (isBid) {
+        return `rgba(0, 240, 255, ${alpha})`;
+      } else {
+        return `rgba(195, 0, 255, ${alpha})`;
       }
     }
-    
-    // Initial animation
-    updatePriceLine();
-    rsiLine.setAttribute('d', generateRSIPath());
-    macdLine.setAttribute('d', generateMACDPath());
-    updateVolumeBars();
-    updateIndicators();
-    
-    // Animate continuously
-    setInterval(() => {
-      updatePriceLine();
-      rsiLine.setAttribute('d', generateRSIPath());
-      macdLine.setAttribute('d', generateMACDPath());
-      updateVolumeBars();
-      updateIndicators();
-    }, 2000);
+
+    function randomHeat() {
+      for (let r = 0; r < rows; r++) {
+        for (let c = 0; c < cols; c++) {
+          const centerBias = 1 - Math.abs(r - rows / 2) / (rows / 2);
+          const noise = Math.random() * 0.6;
+          const intensity = Math.max(0, centerBias * 0.8 + noise - 0.4);
+          const isBid = c < cols / 2;
+          cells[r][c].style.backgroundColor = colorForIntensity(intensity, isBid);
+        }
+      }
+    }
+
+    function updateBestLines() {
+      const bestBidRow = Math.floor(rows / 2 + 2 + Math.random() * 3);
+      const bestAskRow = Math.floor(rows / 2 - 2 - Math.random() * 3);
+      const cellHeight = heatmap.clientHeight / rows;
+
+      if (bestBidLine) {
+        bestBidLine.style.top = `${bestBidRow * cellHeight}px`;
+      }
+      if (bestAskLine) {
+        bestAskLine.style.top = `${bestAskRow * cellHeight}px`;
+      }
+    }
+
+    function spawnBubble() {
+      const typeRand = Math.random();
+      let cls = 'bookmap-bubble bubble-trade';
+      if (typeRand < 0.33) cls = 'bookmap-bubble bubble-bid';
+      else if (typeRand < 0.66) cls = 'bookmap-bubble bubble-ask';
+
+      const bubble = document.createElement('div');
+      bubble.className = cls;
+
+      const size = 14 + Math.random() * 24;
+      const top = 5 + Math.random() * 90; // percent
+      const left = 5 + Math.random() * 90; // percent
+
+      bubble.style.width = `${size}px`;
+      bubble.style.height = `${size}px`;
+      bubble.style.top = `${top}%`;
+      bubble.style.left = `${left}%`;
+      bubble.style.animationDuration = `${2 + Math.random() * 2}s`;
+
+      heatmap.appendChild(bubble);
+
+      setTimeout(() => {
+        bubble.remove();
+      }, 4000);
+    }
+
+    // Initial draw
+    randomHeat();
+    updateBestLines();
+    for (let i = 0; i < 8; i++) spawnBubble();
+
+    // Loops
+    setInterval(randomHeat, 800);
+    setInterval(updateBestLines, 1000);
+    setInterval(spawnBubble, 600);
   }
-  
-  // Initialize chart animation when page loads
+
+  // Initialize animations when page loads
   window.addEventListener('load', () => {
-    setTimeout(animateChart, 500);
+    setTimeout(initBookmap, 500);
   });
 </script>
 
