@@ -649,31 +649,57 @@
       
       <div class="trading-chart">
         <div class="chart-container" id="tradingChart">
-          <div class="bookmap-price-display">42,150.50</div>
-          <div class="bookmap-price-axis" id="bookmapPriceAxis"></div>
-          <div class="bookmap-heatmap" id="bookmapHeatmap"></div>
-          <div class="bookmap-time-axis" id="bookmapTimeAxis"></div>
-
-          <div class="bookmap-overlay">
-            <div class="bookmap-midline" id="bookmapMidline"></div>
-            <div class="bookmap-best-bid" id="bestBidLine"></div>
-            <div class="bookmap-best-ask" id="bestAskLine"></div>
-          </div>
-
-          <div class="bookmap-legend">
-            <div class="legend-item">
-              <span class="legend-color bid"></span>
-              <span>BID LIQUIDITY</span>
-            </div>
-            <div class="legend-item">
-              <span class="legend-color ask"></span>
-              <span>ASK LIQUIDITY</span>
-            </div>
-            <div class="legend-item">
-              <span class="legend-color trade"></span>
-              <span>AGGRESSIVE TRADES</span>
-            </div>
-          </div>
+          <svg width="100%" height="100%" viewBox="0 0 600 400" preserveAspectRatio="none">
+            <!-- Grid lines -->
+            <defs>
+              <linearGradient id="priceGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%" style="stop-color:rgba(0,240,255,0.3);stop-opacity:1" />
+                <stop offset="100%" style="stop-color:rgba(0,240,255,0);stop-opacity:0" />
+              </linearGradient>
+            </defs>
+            
+            <!-- Grid -->
+            <line class="chart-grid" x1="0" y1="80" x2="600" y2="80"/>
+            <line class="chart-grid" x1="0" y1="160" x2="600" y2="160"/>
+            <line class="chart-grid" x1="0" y1="240" x2="600" y2="240"/>
+            <line class="chart-grid" x1="0" y1="320" x2="600" y2="320"/>
+            
+            <!-- Price line (animated) -->
+            <path class="chart-line price" id="priceLine" d="M0,200 L150,180 L300,160 L450,140 L600,120"/>
+            <path id="priceFill" fill="url(#priceGradient)" opacity="0.3"/>
+            
+            <!-- RSI indicator -->
+            <path class="chart-line rsi" id="rsiLine" d="M0,350 L150,320 L300,280 L450,260 L600,240"/>
+            
+            <!-- MACD indicator -->
+            <path class="chart-line macd" id="macdLine" d="M0,380 L150,360 L300,340 L450,350 L600,360"/>
+            
+            <!-- Volume bars (animated) -->
+            <rect x="50" y="300" width="40" height="60" fill="rgba(0,240,255,0.4)" class="volume-bar"/>
+            <rect x="150" y="280" width="40" height="80" fill="rgba(0,240,255,0.4)" class="volume-bar"/>
+            <rect x="250" y="260" width="40" height="100" fill="rgba(0,240,255,0.4)" class="volume-bar"/>
+            <rect x="350" y="240" width="40" height="120" fill="rgba(0,240,255,0.4)" class="volume-bar"/>
+            <rect x="450" y="220" width="40" height="140" fill="rgba(0,240,255,0.4)" class="volume-bar"/>
+            <rect x="550" y="200" width="40" height="160" fill="rgba(0,240,255,0.4)" class="volume-bar"/>
+          </svg>
+          
+          <!-- Animated bubbles -->
+          <div class="chart-bubble bubble-blue" style="width: 30px; height: 30px; top: 20%; left: 15%; animation-delay: 0s;"></div>
+          <div class="chart-bubble bubble-purple" style="width: 25px; height: 25px; top: 45%; left: 35%; animation-delay: 0.5s;"></div>
+          <div class="chart-bubble bubble-green" style="width: 35px; height: 35px; top: 30%; left: 55%; animation-delay: 1s;"></div>
+          <div class="chart-bubble bubble-blue" style="width: 20px; height: 20px; top: 60%; left: 70%; animation-delay: 1.5s;"></div>
+          <div class="chart-bubble bubble-purple" style="width: 28px; height: 28px; top: 25%; left: 80%; animation-delay: 2s;"></div>
+          
+          <!-- Indicators labels -->
+          <div class="chart-label" style="top: 10px; left: 20px;">PRICE</div>
+          <div class="chart-label" style="top: 10px; right: 20px;">RSI: 68</div>
+          <div class="chart-label" style="bottom: 10px; left: 20px;">MACD</div>
+          <div class="chart-label" style="bottom: 10px; right: 20px;">VOLUME</div>
+          
+          <!-- Live indicators -->
+          <div class="chart-indicator" style="top: 50px; right: 30px;">▲ +2.4%</div>
+          <div class="chart-indicator" style="top: 80px; right: 30px; color: var(--neon-purple);">RSI: 68</div>
+          <div class="chart-indicator" style="top: 110px; right: 30px; color: var(--neon-green);">MACD: +</div>
         </div>
       </div>
     </div>
@@ -889,235 +915,106 @@
     successMsg.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
   }
 
-  // Realistic Bookmap-style Heatmap Animation
-  function initBookmap() {
-    const rows = 25;
-    const cols = 50;
-    const heatmap = document.getElementById('bookmapHeatmap');
-    const priceAxis = document.getElementById('bookmapPriceAxis');
-    const timeAxis = document.getElementById('bookmapTimeAxis');
-    const bestBidLine = document.getElementById('bestBidLine');
-    const bestAskLine = document.getElementById('bestAskLine');
-    const midLine = document.getElementById('bookmapMidline');
-
-    if (!heatmap || !priceAxis || !timeAxis) return;
-
-    // Realistic price simulation
-    let currentPrice = 42150.50;
-    let priceVelocity = 0;
-    const tickSize = 0.5;
-    const midPrice = currentPrice;
-
-    // Order book depth simulation (more realistic)
-    const orderBookDepth = [];
-    for (let r = 0; r < rows; r++) {
-      orderBookDepth[r] = [];
-      for (let c = 0; c < cols; c++) {
-        orderBookDepth[r][c] = {
-          bidVolume: 0,
-          askVolume: 0,
-          lastUpdate: 0
-        };
+  // Trading Chart Animation
+  function animateChart() {
+    const priceLine = document.getElementById('priceLine');
+    const rsiLine = document.getElementById('rsiLine');
+    const macdLine = document.getElementById('macdLine');
+    const volumeBars = document.querySelectorAll('.volume-bar');
+    
+    // Generate random price data points
+    function generatePricePath() {
+      let path = 'M0,200';
+      let y = 200;
+      for (let x = 50; x <= 600; x += 50) {
+        y += (Math.random() - 0.5) * 30;
+        y = Math.max(100, Math.min(300, y)); // Keep within bounds
+        path += ` L${x},${y}`;
       }
+      return path;
     }
-
-    // Price levels with realistic formatting
-    for (let i = 0; i < rows; i++) {
-      const level = document.createElement('div');
-      const price = midPrice + (rows / 2 - i) * tickSize;
-      level.className = 'price-level';
-      level.textContent = price.toFixed(2);
-      priceAxis.appendChild(level);
-    }
-
-    // Time axis with real timestamps
-    const now = new Date();
-    for (let i = 0; i < 6; i++) {
-      const t = document.createElement('div');
-      const time = new Date(now.getTime() - (5 - i) * 5000);
-      t.textContent = time.toLocaleTimeString('en-US', { hour12: false, second: '2-digit' }).slice(-5);
-      timeAxis.appendChild(t);
-    }
-
-    // Create heatmap cells
-    const cells = [];
-    for (let r = 0; r < rows; r++) {
-      cells[r] = [];
-      for (let c = 0; c < cols; c++) {
-        const cell = document.createElement('div');
-        cell.className = 'bookmap-cell';
-        heatmap.appendChild(cell);
-        cells[r][c] = cell;
+    
+    function generateRSIPath() {
+      let path = 'M0,350';
+      let y = 350;
+      for (let x = 50; x <= 600; x += 50) {
+        y += (Math.random() - 0.5) * 20;
+        y = Math.max(240, Math.min(380, y));
+        path += ` L${x},${y}`;
       }
+      return path;
     }
-
-    // Realistic color intensity based on volume
-    function colorForIntensity(volume, maxVolume, isBid) {
-      const intensity = Math.min(1, volume / maxVolume);
-      const alpha = 0.1 + intensity * 0.85;
-      const glow = intensity * 0.5;
+    
+    function generateMACDPath() {
+      let path = 'M0,380';
+      let y = 380;
+      for (let x = 50; x <= 600; x += 50) {
+        y += (Math.random() - 0.5) * 15;
+        y = Math.max(360, Math.min(390, y));
+        path += ` L${x},${y}`;
+      }
+      return path;
+    }
+    
+    // Animate price line
+    function updatePriceLine() {
+      const newPath = generatePricePath();
+      priceLine.setAttribute('d', newPath);
       
-      if (isBid) {
-        return {
-          bg: `rgba(0, 240, 255, ${alpha})`,
-          shadow: `0 0 ${8 + glow * 12}px rgba(0, 240, 255, ${0.3 + glow * 0.5})`
-        };
-      } else {
-        return {
-          bg: `rgba(195, 0, 255, ${alpha})`,
-          shadow: `0 0 ${8 + glow * 12}px rgba(195, 0, 255, ${0.3 + glow * 0.5})`
-        };
+      // Add gradient fill area
+      const fillPath = document.getElementById('priceFill');
+      if (fillPath) {
+        const fillArea = newPath + ` L600,400 L0,400 Z`;
+        fillPath.setAttribute('d', fillArea);
       }
     }
-
-    // Simulate realistic order book with exponential decay
-    function updateOrderBook() {
-      const midRow = Math.floor(rows / 2);
-      const spread = 2 + Math.random() * 3; // 2-5 ticks spread
-      const bestBidRow = midRow + Math.floor(spread / 2);
-      const bestAskRow = midRow - Math.floor(spread / 2);
+    
+    // Animate volume bars
+    function updateVolumeBars() {
+      volumeBars.forEach((bar, index) => {
+        const height = 60 + Math.random() * 100;
+        const y = 400 - height;
+        bar.setAttribute('y', y);
+        bar.setAttribute('height', height);
+        bar.style.opacity = 0.3 + Math.random() * 0.4;
+      });
+    }
+    
+    // Update indicators
+    function updateIndicators() {
+      const rsiValue = Math.floor(50 + Math.random() * 30);
+      const macdValue = (Math.random() - 0.5) * 2;
+      const priceChange = (Math.random() - 0.3) * 5;
       
-      let maxVolume = 0;
-
-      // Update order book depth (exponential decay from best bid/ask)
-      for (let r = 0; r < rows; r++) {
-        for (let c = 0; c < cols; c++) {
-          const isBid = c < cols / 2;
-          const distanceFromBest = isBid 
-            ? Math.abs(r - bestBidRow)
-            : Math.abs(r - bestAskRow);
-          
-          // Exponential decay with some randomness
-          const baseVolume = Math.exp(-distanceFromBest * 0.15) * (0.7 + Math.random() * 0.3);
-          const timeDecay = Math.exp(-(Date.now() - orderBookDepth[r][c].lastUpdate) / 2000);
-          
-          if (isBid) {
-            orderBookDepth[r][c].bidVolume = baseVolume * timeDecay * (100 + Math.random() * 200);
-            orderBookDepth[r][c].lastUpdate = Date.now();
-            maxVolume = Math.max(maxVolume, orderBookDepth[r][c].bidVolume);
-          } else {
-            orderBookDepth[r][c].askVolume = baseVolume * timeDecay * (100 + Math.random() * 200);
-            orderBookDepth[r][c].lastUpdate = Date.now();
-            maxVolume = Math.max(maxVolume, orderBookDepth[r][c].askVolume);
-          }
-        }
-      }
-
-      // Update heatmap visualization
-      for (let r = 0; r < rows; r++) {
-        for (let c = 0; c < cols; c++) {
-          const isBid = c < cols / 2;
-          const volume = isBid ? orderBookDepth[r][c].bidVolume : orderBookDepth[r][c].askVolume;
-          const colors = colorForIntensity(volume, maxVolume, isBid);
-          
-          cells[r][c].style.backgroundColor = colors.bg;
-          cells[r][c].style.boxShadow = colors.shadow;
-        }
-      }
-
-      return { bestBidRow, bestAskRow, midRow };
-    }
-
-    // Smooth price movement simulation
-    function updatePrice() {
-      // Random walk with mean reversion
-      const randomWalk = (Math.random() - 0.5) * 0.3;
-      const meanReversion = (midPrice - currentPrice) * 0.02;
-      priceVelocity = priceVelocity * 0.7 + randomWalk + meanReversion;
-      currentPrice += priceVelocity;
-      
-      // Keep price in reasonable range
-      currentPrice = Math.max(midPrice - 50, Math.min(midPrice + 50, currentPrice));
-      
-      // Update price display
-      const priceDisplay = document.querySelector('.bookmap-price-display');
-      if (priceDisplay) {
-        const change = currentPrice - midPrice;
-        priceDisplay.textContent = currentPrice.toLocaleString('en-US', { 
-          minimumFractionDigits: 2, 
-          maximumFractionDigits: 2 
-        });
-        priceDisplay.style.color = change >= 0 ? 'var(--neon-green)' : 'var(--neon-purple)';
-        priceDisplay.style.textShadow = change >= 0 
-          ? '0 0 15px var(--neon-green)' 
-          : '0 0 15px var(--neon-purple)';
+      const indicators = document.querySelectorAll('.chart-indicator');
+      if (indicators.length >= 3) {
+        indicators[0].textContent = priceChange > 0 ? `▲ +${priceChange.toFixed(2)}%` : `▼ ${priceChange.toFixed(2)}%`;
+        indicators[0].style.color = priceChange > 0 ? 'var(--neon-green)' : 'var(--neon-purple)';
+        indicators[1].textContent = `RSI: ${rsiValue}`;
+        indicators[2].textContent = `MACD: ${macdValue > 0 ? '+' : ''}${macdValue.toFixed(2)}`;
       }
     }
-
-    function updateBestLines() {
-      const { bestBidRow, bestAskRow, midRow } = updateOrderBook();
-      const cellHeight = heatmap.clientHeight / rows;
-
-      if (bestBidLine) {
-        bestBidLine.style.top = `${bestBidRow * cellHeight}px`;
-      }
-      if (bestAskLine) {
-        bestAskLine.style.top = `${bestAskRow * cellHeight}px`;
-      }
-      if (midLine) {
-        midLine.style.top = `${midRow * cellHeight}px`;
-      }
-    }
-
-    // Realistic trade bubbles (spawn near best bid/ask)
-    function spawnBubble() {
-      const bookData = updateOrderBook();
-      const { bestBidRow, bestAskRow } = bookData;
-      const midRow = Math.floor(rows / 2);
-      const cellHeight = heatmap.clientHeight / rows;
-      
-      const typeRand = Math.random();
-      let cls = 'bookmap-bubble bubble-trade';
-      let row = midRow;
-      
-      if (typeRand < 0.4) {
-        cls = 'bookmap-bubble bubble-bid';
-        row = bestBidRow + Math.floor((Math.random() - 0.5) * 3);
-      } else if (typeRand < 0.8) {
-        cls = 'bookmap-bubble bubble-ask';
-        row = bestAskRow + Math.floor((Math.random() - 0.5) * 3);
-      } else {
-        row = midRow + Math.floor((Math.random() - 0.5) * 4);
-      }
-
-      const bubble = document.createElement('div');
-      bubble.className = cls;
-
-      const size = 12 + Math.random() * 20;
-      const top = row * cellHeight + (Math.random() - 0.5) * cellHeight;
-      const left = 10 + Math.random() * 80; // percent
-
-      bubble.style.width = `${size}px`;
-      bubble.style.height = `${size}px`;
-      bubble.style.top = `${top}px`;
-      bubble.style.left = `${left}%`;
-      bubble.style.animationDuration = `${1.5 + Math.random() * 1.5}s`;
-
-      heatmap.appendChild(bubble);
-
-      setTimeout(() => {
-        bubble.remove();
-      }, 3000);
-    }
-
-    // Initial draw
-    updateOrderBook();
-    updateBestLines();
-    updatePrice();
-    for (let i = 0; i < 12; i++) {
-      setTimeout(() => spawnBubble(), i * 200);
-    }
-
-    // Realistic update intervals
-    setInterval(updateOrderBook, 300); // Fast order book updates
-    setInterval(updateBestLines, 500);
-    setInterval(updatePrice, 100); // Smooth price updates
-    setInterval(spawnBubble, 400); // Frequent trades
+    
+    // Initial animation
+    updatePriceLine();
+    rsiLine.setAttribute('d', generateRSIPath());
+    macdLine.setAttribute('d', generateMACDPath());
+    updateVolumeBars();
+    updateIndicators();
+    
+    // Animate continuously
+    setInterval(() => {
+      updatePriceLine();
+      rsiLine.setAttribute('d', generateRSIPath());
+      macdLine.setAttribute('d', generateMACDPath());
+      updateVolumeBars();
+      updateIndicators();
+    }, 2000);
   }
-
-  // Initialize animations when page loads
+  
+  // Initialize chart animation when page loads
   window.addEventListener('load', () => {
-    setTimeout(initBookmap, 500);
+    setTimeout(animateChart, 500);
   });
 </script>
 
