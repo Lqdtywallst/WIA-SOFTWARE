@@ -567,6 +567,18 @@
       text-align: right;
     }
 
+    .bookmap-price-display {
+      position: absolute;
+      top: 1rem;
+      left: 1.2rem;
+      font-family: 'Orbitron', sans-serif;
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: var(--neon-blue);
+      text-shadow: 0 0 15px var(--neon-blue);
+      letter-spacing: 1px;
+    }
+
     .legend-item {
       display: flex;
       align-items: center;
@@ -637,12 +649,13 @@
       
       <div class="trading-chart">
         <div class="chart-container" id="tradingChart">
+          <div class="bookmap-price-display">42,150.50</div>
           <div class="bookmap-price-axis" id="bookmapPriceAxis"></div>
           <div class="bookmap-heatmap" id="bookmapHeatmap"></div>
           <div class="bookmap-time-axis" id="bookmapTimeAxis"></div>
 
           <div class="bookmap-overlay">
-            <div class="bookmap-midline"></div>
+            <div class="bookmap-midline" id="bookmapMidline"></div>
             <div class="bookmap-best-bid" id="bestBidLine"></div>
             <div class="bookmap-best-ask" id="bestAskLine"></div>
           </div>
@@ -876,34 +889,53 @@
     successMsg.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
   }
 
-  // Bookmap-style Heatmap Animation
+  // Realistic Bookmap-style Heatmap Animation
   function initBookmap() {
-    const rows = 20;
-    const cols = 40;
+    const rows = 25;
+    const cols = 50;
     const heatmap = document.getElementById('bookmapHeatmap');
     const priceAxis = document.getElementById('bookmapPriceAxis');
     const timeAxis = document.getElementById('bookmapTimeAxis');
     const bestBidLine = document.getElementById('bestBidLine');
     const bestAskLine = document.getElementById('bestAskLine');
+    const midLine = document.getElementById('bookmapMidline');
 
     if (!heatmap || !priceAxis || !timeAxis) return;
 
-    // Price levels (dummy)
-    const midPrice = 42000;
-    const tickSize = 10;
+    // Realistic price simulation
+    let currentPrice = 42150.50;
+    let priceVelocity = 0;
+    const tickSize = 0.5;
+    const midPrice = currentPrice;
 
+    // Order book depth simulation (more realistic)
+    const orderBookDepth = [];
+    for (let r = 0; r < rows; r++) {
+      orderBookDepth[r] = [];
+      for (let c = 0; c < cols; c++) {
+        orderBookDepth[r][c] = {
+          bidVolume: 0,
+          askVolume: 0,
+          lastUpdate: 0
+        };
+      }
+    }
+
+    // Price levels with realistic formatting
     for (let i = 0; i < rows; i++) {
       const level = document.createElement('div');
       const price = midPrice + (rows / 2 - i) * tickSize;
       level.className = 'price-level';
-      level.textContent = price.toLocaleString('en-US', { maximumFractionDigits: 0 });
+      level.textContent = price.toFixed(2);
       priceAxis.appendChild(level);
     }
 
-    // Time axis
+    // Time axis with real timestamps
+    const now = new Date();
     for (let i = 0; i < 6; i++) {
       const t = document.createElement('div');
-      t.textContent = `T-${(6 - i) * 5}s`;
+      const time = new Date(now.getTime() - (5 - i) * 5000);
+      t.textContent = time.toLocaleTimeString('en-US', { hour12: false, second: '2-digit' }).slice(-5);
       timeAxis.appendChild(t);
     }
 
@@ -919,32 +951,101 @@
       }
     }
 
-    function colorForIntensity(i, isBid) {
-      // i: 0..1
-      const clamped = Math.max(0, Math.min(1, i));
-      const alpha = 0.05 + clamped * 0.9;
+    // Realistic color intensity based on volume
+    function colorForIntensity(volume, maxVolume, isBid) {
+      const intensity = Math.min(1, volume / maxVolume);
+      const alpha = 0.1 + intensity * 0.85;
+      const glow = intensity * 0.5;
+      
       if (isBid) {
-        return `rgba(0, 240, 255, ${alpha})`;
+        return {
+          bg: `rgba(0, 240, 255, ${alpha})`,
+          shadow: `0 0 ${8 + glow * 12}px rgba(0, 240, 255, ${0.3 + glow * 0.5})`
+        };
       } else {
-        return `rgba(195, 0, 255, ${alpha})`;
+        return {
+          bg: `rgba(195, 0, 255, ${alpha})`,
+          shadow: `0 0 ${8 + glow * 12}px rgba(195, 0, 255, ${0.3 + glow * 0.5})`
+        };
       }
     }
 
-    function randomHeat() {
+    // Simulate realistic order book with exponential decay
+    function updateOrderBook() {
+      const midRow = Math.floor(rows / 2);
+      const spread = 2 + Math.random() * 3; // 2-5 ticks spread
+      const bestBidRow = midRow + Math.floor(spread / 2);
+      const bestAskRow = midRow - Math.floor(spread / 2);
+      
+      let maxVolume = 0;
+
+      // Update order book depth (exponential decay from best bid/ask)
       for (let r = 0; r < rows; r++) {
         for (let c = 0; c < cols; c++) {
-          const centerBias = 1 - Math.abs(r - rows / 2) / (rows / 2);
-          const noise = Math.random() * 0.6;
-          const intensity = Math.max(0, centerBias * 0.8 + noise - 0.4);
           const isBid = c < cols / 2;
-          cells[r][c].style.backgroundColor = colorForIntensity(intensity, isBid);
+          const distanceFromBest = isBid 
+            ? Math.abs(r - bestBidRow)
+            : Math.abs(r - bestAskRow);
+          
+          // Exponential decay with some randomness
+          const baseVolume = Math.exp(-distanceFromBest * 0.15) * (0.7 + Math.random() * 0.3);
+          const timeDecay = Math.exp(-(Date.now() - orderBookDepth[r][c].lastUpdate) / 2000);
+          
+          if (isBid) {
+            orderBookDepth[r][c].bidVolume = baseVolume * timeDecay * (100 + Math.random() * 200);
+            orderBookDepth[r][c].lastUpdate = Date.now();
+            maxVolume = Math.max(maxVolume, orderBookDepth[r][c].bidVolume);
+          } else {
+            orderBookDepth[r][c].askVolume = baseVolume * timeDecay * (100 + Math.random() * 200);
+            orderBookDepth[r][c].lastUpdate = Date.now();
+            maxVolume = Math.max(maxVolume, orderBookDepth[r][c].askVolume);
+          }
         }
+      }
+
+      // Update heatmap visualization
+      for (let r = 0; r < rows; r++) {
+        for (let c = 0; c < cols; c++) {
+          const isBid = c < cols / 2;
+          const volume = isBid ? orderBookDepth[r][c].bidVolume : orderBookDepth[r][c].askVolume;
+          const colors = colorForIntensity(volume, maxVolume, isBid);
+          
+          cells[r][c].style.backgroundColor = colors.bg;
+          cells[r][c].style.boxShadow = colors.shadow;
+        }
+      }
+
+      return { bestBidRow, bestAskRow, midRow };
+    }
+
+    // Smooth price movement simulation
+    function updatePrice() {
+      // Random walk with mean reversion
+      const randomWalk = (Math.random() - 0.5) * 0.3;
+      const meanReversion = (midPrice - currentPrice) * 0.02;
+      priceVelocity = priceVelocity * 0.7 + randomWalk + meanReversion;
+      currentPrice += priceVelocity;
+      
+      // Keep price in reasonable range
+      currentPrice = Math.max(midPrice - 50, Math.min(midPrice + 50, currentPrice));
+      
+      // Update price display
+      const priceDisplay = document.querySelector('.bookmap-price-display');
+      if (priceDisplay) {
+        const change = currentPrice - midPrice;
+        priceDisplay.textContent = currentPrice.toLocaleString('en-US', { 
+          minimumFractionDigits: 2, 
+          maximumFractionDigits: 2 
+        });
+        priceDisplay.style.color = change >= 0 ? 'var(--neon-green)' : 'var(--neon-purple)';
+        priceDisplay.style.textShadow = change >= 0 
+          ? '0 0 15px var(--neon-green)' 
+          : '0 0 15px var(--neon-purple)';
       }
     }
 
     function updateBestLines() {
-      const bestBidRow = Math.floor(rows / 2 + 2 + Math.random() * 3);
-      const bestAskRow = Math.floor(rows / 2 - 2 - Math.random() * 3);
+      const { bestBidRow, bestAskRow, midRow } = updateOrderBook();
       const cellHeight = heatmap.clientHeight / rows;
 
       if (bestBidLine) {
@@ -953,43 +1054,65 @@
       if (bestAskLine) {
         bestAskLine.style.top = `${bestAskRow * cellHeight}px`;
       }
+      if (midLine) {
+        midLine.style.top = `${midRow * cellHeight}px`;
+      }
     }
 
+    // Realistic trade bubbles (spawn near best bid/ask)
     function spawnBubble() {
+      const bookData = updateOrderBook();
+      const { bestBidRow, bestAskRow } = bookData;
+      const midRow = Math.floor(rows / 2);
+      const cellHeight = heatmap.clientHeight / rows;
+      
       const typeRand = Math.random();
       let cls = 'bookmap-bubble bubble-trade';
-      if (typeRand < 0.33) cls = 'bookmap-bubble bubble-bid';
-      else if (typeRand < 0.66) cls = 'bookmap-bubble bubble-ask';
+      let row = midRow;
+      
+      if (typeRand < 0.4) {
+        cls = 'bookmap-bubble bubble-bid';
+        row = bestBidRow + Math.floor((Math.random() - 0.5) * 3);
+      } else if (typeRand < 0.8) {
+        cls = 'bookmap-bubble bubble-ask';
+        row = bestAskRow + Math.floor((Math.random() - 0.5) * 3);
+      } else {
+        row = midRow + Math.floor((Math.random() - 0.5) * 4);
+      }
 
       const bubble = document.createElement('div');
       bubble.className = cls;
 
-      const size = 14 + Math.random() * 24;
-      const top = 5 + Math.random() * 90; // percent
-      const left = 5 + Math.random() * 90; // percent
+      const size = 12 + Math.random() * 20;
+      const top = row * cellHeight + (Math.random() - 0.5) * cellHeight;
+      const left = 10 + Math.random() * 80; // percent
 
       bubble.style.width = `${size}px`;
       bubble.style.height = `${size}px`;
-      bubble.style.top = `${top}%`;
+      bubble.style.top = `${top}px`;
       bubble.style.left = `${left}%`;
-      bubble.style.animationDuration = `${2 + Math.random() * 2}s`;
+      bubble.style.animationDuration = `${1.5 + Math.random() * 1.5}s`;
 
       heatmap.appendChild(bubble);
 
       setTimeout(() => {
         bubble.remove();
-      }, 4000);
+      }, 3000);
     }
 
     // Initial draw
-    randomHeat();
+    updateOrderBook();
     updateBestLines();
-    for (let i = 0; i < 8; i++) spawnBubble();
+    updatePrice();
+    for (let i = 0; i < 12; i++) {
+      setTimeout(() => spawnBubble(), i * 200);
+    }
 
-    // Loops
-    setInterval(randomHeat, 800);
-    setInterval(updateBestLines, 1000);
-    setInterval(spawnBubble, 600);
+    // Realistic update intervals
+    setInterval(updateOrderBook, 300); // Fast order book updates
+    setInterval(updateBestLines, 500);
+    setInterval(updatePrice, 100); // Smooth price updates
+    setInterval(spawnBubble, 400); // Frequent trades
   }
 
   // Initialize animations when page loads
