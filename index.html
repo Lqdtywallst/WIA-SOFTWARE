@@ -271,6 +271,103 @@
       font-size: 0.9rem;
     }
 
+    .contact-form {
+      max-width: 700px;
+      margin: 0 auto;
+      background: var(--card);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(0,240,255,0.15);
+      border-radius: 8px;
+      padding: 3.5rem;
+      margin-top: 3rem;
+    }
+
+    .form-group {
+      margin-bottom: 2rem;
+    }
+
+    .form-group label {
+      display: block;
+      color: var(--neon-blue);
+      font-weight: 700;
+      margin-bottom: 0.8rem;
+      font-size: 0.95rem;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    .form-group input,
+    .form-group textarea,
+    .form-group select {
+      width: 100%;
+      padding: 1rem 1.2rem;
+      background: rgba(0,240,255,0.05);
+      border: 2px solid rgba(0,240,255,0.2);
+      border-radius: 4px;
+      color: var(--text);
+      font-family: 'Roboto Mono', monospace;
+      font-size: 1rem;
+      transition: all 0.3s;
+    }
+
+    .form-group input:focus,
+    .form-group textarea:focus,
+    .form-group select:focus {
+      outline: none;
+      border-color: var(--neon-blue);
+      box-shadow: 0 0 20px rgba(0,240,255,0.3);
+      background: rgba(0,240,255,0.08);
+    }
+
+    .form-group textarea {
+      min-height: 150px;
+      resize: vertical;
+    }
+
+    .form-group input::placeholder,
+    .form-group textarea::placeholder {
+      color: var(--text-dim);
+      opacity: 0.6;
+    }
+
+    .submit-btn {
+      width: 100%;
+      padding: 1.2rem 2.8rem;
+      font-family: 'Orbitron', sans-serif;
+      font-weight: 700;
+      font-size: 1.1rem;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      background: rgba(0,240,255,0.1);
+      border: 2px solid var(--neon-blue);
+      color: var(--neon-blue);
+      cursor: pointer;
+      transition: all 0.4s;
+      box-shadow: 0 0 20px rgba(0,240,255,0.4);
+    }
+
+    .submit-btn:hover {
+      background: var(--neon-blue);
+      color: #000;
+      box-shadow: 0 0 40px var(--neon-blue);
+      transform: translateY(-3px);
+    }
+
+    .form-success {
+      display: none;
+      text-align: center;
+      padding: 2rem;
+      background: rgba(57,255,20,0.1);
+      border: 2px solid var(--neon-green);
+      border-radius: 8px;
+      color: var(--neon-green);
+      margin-top: 2rem;
+    }
+
+    .form-success.show {
+      display: block;
+    }
+
     .lang-toggle {
       position: fixed;
       top: 1.4rem;
@@ -420,11 +517,58 @@
 
 <footer id="contact">
   <div class="container">
-    <p style="font-size:1.4rem; margin-bottom:1.5rem; color:var(--neon-blue); text-shadow:0 0 15px;">
-      WIA-SOFTWARE · NEXT EXECUTION LAYER
-    </p>
-    <p data-lang-es="Desarrollo propietario • Acceso restringido • Solo para instituciones y traders serios" data-lang-en="Proprietary development • Restricted access • Only for institutions and serious traders">Desarrollo propietario • Acceso restringido • Solo para instituciones y traders serios</p>
-    <p style="margin-top:3rem; color:#4a7cff; font-size:0.9rem;">
+    <h2 class="section-title" data-lang-es="SOLICITAR ACCESO" data-lang-en="REQUEST ACCESS" style="margin-bottom: 1rem;">SOLICITAR ACCESO</h2>
+    <p style="text-align: center; color: var(--text-dim); margin-bottom: 3rem; font-size: 1.1rem;" data-lang-es="Complete el formulario para solicitar acceso a nuestras plataformas de trading" data-lang-en="Complete the form to request access to our trading platforms">Complete el formulario para solicitar acceso a nuestras plataformas de trading</p>
+    
+    <form class="contact-form" id="accessForm" onsubmit="handleSubmit(event)">
+      <div class="form-group">
+        <label data-lang-es="Nombre completo" data-lang-en="Full Name">Nombre completo</label>
+        <input type="text" name="name" required placeholder="John Doe" />
+      </div>
+      
+      <div class="form-group">
+        <label data-lang-es="Email corporativo" data-lang-en="Corporate Email">Email corporativo</label>
+        <input type="email" name="email" required placeholder="john@company.com" />
+      </div>
+      
+      <div class="form-group">
+        <label data-lang-es="Empresa / Institución" data-lang-en="Company / Institution">Empresa / Institución</label>
+        <input type="text" name="company" required placeholder="Trading Corp" />
+      </div>
+      
+      <div class="form-group">
+        <label data-lang-es="Cargo / Posición" data-lang-en="Position / Role">Cargo / Posición</label>
+        <input type="text" name="position" required placeholder="Head of Trading" />
+      </div>
+      
+      <div class="form-group">
+        <label data-lang-es="Tipo de servicio de interés" data-lang-en="Service of Interest">Tipo de servicio de interés</label>
+        <select name="service" required>
+          <option value="" data-lang-es="Seleccione un servicio" data-lang-en="Select a service">Seleccione un servicio</option>
+          <option value="platform" data-lang-es="Desarrollo de Plataforma" data-lang-en="Platform Development">Desarrollo de Plataforma</option>
+          <option value="execution" data-lang-es="Sistemas de Ejecución" data-lang-en="Execution Systems">Sistemas de Ejecución</option>
+          <option value="api" data-lang-es="APIs y Conectividad" data-lang-en="APIs & Connectivity">APIs y Conectividad</option>
+          <option value="backtesting" data-lang-es="Sistemas de Backtesting" data-lang-en="Backtesting Systems">Sistemas de Backtesting</option>
+          <option value="bots" data-lang-es="Bots de Trading" data-lang-en="Trading Bots">Bots de Trading</option>
+          <option value="consulting" data-lang-es="Consultoría" data-lang-en="Consulting">Consultoría</option>
+          <option value="other" data-lang-es="Otro" data-lang-en="Other">Otro</option>
+        </select>
+      </div>
+      
+      <div class="form-group">
+        <label data-lang-es="Mensaje / Requisitos" data-lang-en="Message / Requirements">Mensaje / Requisitos</label>
+        <textarea name="message" required placeholder="Describe tus necesidades y requisitos..." data-lang-es-placeholder="Describe tus necesidades y requisitos..." data-lang-en-placeholder="Describe your needs and requirements..."></textarea>
+      </div>
+      
+      <button type="submit" class="submit-btn" data-lang-es="ENVIAR SOLICITUD" data-lang-en="SUBMIT REQUEST">ENVIAR SOLICITUD</button>
+      
+      <div class="form-success" id="formSuccess">
+        <p style="font-size: 1.2rem; font-weight: 700;" data-lang-es="✓ Solicitud enviada correctamente. Nos pondremos en contacto contigo pronto." data-lang-en="✓ Request submitted successfully. We will contact you soon.">✓ Solicitud enviada correctamente. Nos pondremos en contacto contigo pronto.</p>
+      </div>
+    </form>
+    
+    <p style="text-align: center; margin-top: 4rem; color: var(--text-dim); font-size: 0.9rem;" data-lang-es="Desarrollo propietario • Acceso restringido • Solo para instituciones y traders serios" data-lang-en="Proprietary development • Restricted access • Only for institutions and serious traders">Desarrollo propietario • Acceso restringido • Solo para instituciones y traders serios</p>
+    <p style="text-align: center; margin-top: 2rem; color:#4a7cff; font-size:0.9rem;">
       © 2025 WIA-SOFTWARE — ALL RIGHTS RESERVED — RUN THE EDGE
     </p>
   </div>
@@ -448,12 +592,54 @@
         if (element.hasAttribute('data-lang-es')) {
           element.textContent = element.getAttribute('data-lang-es');
         }
+        // Actualizar placeholders
+        if (element.hasAttribute('data-lang-es-placeholder')) {
+          element.placeholder = element.getAttribute('data-lang-es-placeholder');
+        }
       } else {
         if (element.hasAttribute('data-lang-en')) {
           element.textContent = element.getAttribute('data-lang-en');
         }
+        // Actualizar placeholders
+        if (element.hasAttribute('data-lang-en-placeholder')) {
+          element.placeholder = element.getAttribute('data-lang-en-placeholder');
+        }
       }
     });
+    
+    // Actualizar opciones de select
+    const selectOptions = document.querySelectorAll('select option');
+    selectOptions.forEach(option => {
+      if (currentLang === 'es' && option.hasAttribute('data-lang-es')) {
+        option.textContent = option.getAttribute('data-lang-es');
+      } else if (currentLang === 'en' && option.hasAttribute('data-lang-en')) {
+        option.textContent = option.getAttribute('data-lang-en');
+      }
+    });
+  }
+
+  function handleSubmit(event) {
+    event.preventDefault();
+    
+    const form = document.getElementById('accessForm');
+    const formData = new FormData(form);
+    
+    // Aquí puedes añadir lógica para enviar los datos a un servidor
+    // Por ahora solo mostramos el mensaje de éxito
+    console.log('Form data:', Object.fromEntries(formData));
+    
+    // Mostrar mensaje de éxito
+    const successMsg = document.getElementById('formSuccess');
+    successMsg.classList.add('show');
+    
+    // Resetear formulario después de 3 segundos
+    setTimeout(() => {
+      form.reset();
+      successMsg.classList.remove('show');
+    }, 5000);
+    
+    // Scroll suave al mensaje de éxito
+    successMsg.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
   }
 </script>
 
