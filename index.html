@@ -2,10 +2,37 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>WIA-Software · Next-Gen Trading Systems</title>
-  <meta name="description" content="Infraestructura algorítmica. Bots HFT. Plataformas cuantitativas. Ejecución sub-milisegundo."/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0"/>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
   
+  <!-- Primary SEO -->
+  <title>WIA-Software · Next-Gen Trading Systems | HFT & Algorithmic Trading</title>
+  <meta name="description" content="Infraestructura algorítmica de próxima generación. Bots HFT, plataformas cuantitativas, ejecución sub-milisegundo. Desarrollo de software de trading profesional."/>
+  <meta name="keywords" content="trading algorítmico, HFT, high frequency trading, bots trading, plataformas trading, software trading, algoritmos trading, quantitative trading"/>
+  <meta name="author" content="WIA-Software"/>
+  <meta name="robots" content="index, follow"/>
+  <link rel="canonical" href="https://wia-software.com/"/>
+  
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website"/>
+  <meta property="og:url" content="https://wia-software.com/"/>
+  <meta property="og:title" content="WIA-Software · Next-Gen Trading Systems"/>
+  <meta property="og:description" content="Infraestructura algorítmica de próxima generación. Bots HFT, plataformas cuantitativas, ejecución sub-milisegundo."/>
+  <meta property="og:image" content="https://wia-software.com/og-image.jpg"/>
+  <meta property="og:locale" content="es_ES"/>
+  <meta property="og:locale:alternate" content="en_US"/>
+  
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image"/>
+  <meta name="twitter:url" content="https://wia-software.com/"/>
+  <meta name="twitter:title" content="WIA-Software · Next-Gen Trading Systems"/>
+  <meta name="twitter:description" content="Infraestructura algorítmica de próxima generación. Bots HFT, plataformas cuantitativas."/>
+  <meta name="twitter:image" content="https://wia-software.com/twitter-image.jpg"/>
+  
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>"/>
+  
+  <!-- Preconnect for performance -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet">
@@ -28,6 +55,10 @@
       box-sizing: border-box;
     }
 
+    html {
+      scroll-behavior: smooth;
+    }
+    
     body {
       background: var(--bg);
       color: var(--text);
@@ -38,6 +69,28 @@
         radial-gradient(circle at 20% 30%, rgba(0,240,255,0.08) 0%, transparent 25%),
         radial-gradient(circle at 80% 70%, rgba(195,0,255,0.06) 0%, transparent 30%);
       background-attachment: fixed;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+    
+    /* Skip to content for accessibility */
+    .skip-link {
+      position: absolute;
+      top: -40px;
+      left: 0;
+      background: var(--neon-blue);
+      color: #000;
+      padding: 8px;
+      text-decoration: none;
+      z-index: 100;
+    }
+    
+    .skip-link:focus {
+      top: 0;
+    }
+    
+    main {
+      min-height: 100vh;
     }
 
     .container {
@@ -61,6 +114,28 @@
       justify-content: space-between;
       align-items: center;
       padding: 1.4rem 0;
+      position: relative;
+    }
+    
+    .mobile-menu-toggle {
+      display: none;
+      background: transparent;
+      border: 2px solid var(--neon-blue);
+      color: var(--neon-blue);
+      padding: 0.5rem 0.8rem;
+      cursor: pointer;
+      font-size: 1.2rem;
+      transition: all 0.3s;
+    }
+    
+    .mobile-menu-toggle:hover {
+      background: rgba(0,240,255,0.1);
+      box-shadow: 0 0 15px rgba(0,240,255,0.5);
+    }
+    
+    .mobile-menu-toggle.active {
+      background: var(--neon-blue);
+      color: #000;
     }
 
     .logo {
@@ -75,16 +150,22 @@
       text-shadow: 0 0 15px rgba(0,240,255,0.6);
     }
 
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+    }
+    
     .nav-links a {
       color: var(--text-dim);
       text-decoration: none;
-      margin-left: 3.5rem;
       font-size: 0.95rem;
       font-weight: 700;
       letter-spacing: 1.5px;
       text-transform: uppercase;
       transition: all 0.3s;
       position: relative;
+      white-space: nowrap;
     }
 
     .nav-links a::after {
@@ -132,20 +213,14 @@
       z-index: 2;
       max-width: 1400px;
       display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 4rem;
+      grid-template-columns: 1fr;
+      gap: 3rem;
       align-items: center;
     }
 
     .hero-text {
       position: relative;
-    }
-
-    @media (max-width: 1200px) {
-      .hero-content {
-        grid-template-columns: 1fr;
-        gap: 3rem;
-      }
+      text-align: center;
     }
 
     .hero h1 {
@@ -211,7 +286,8 @@
     }
 
     section {
-      padding: 10rem 0;
+      padding: 8rem 0;
+      scroll-margin-top: 80px;
     }
 
     h2.section-title {
@@ -227,9 +303,9 @@
 
     .features-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
-      gap: 2.5rem;
-      margin-top: 5rem;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 2rem;
+      margin-top: 4rem;
     }
 
     .feature-card {
@@ -532,14 +608,175 @@
       color: rgba(74,222,128,1);
     }
 
-    @media (max-width: 900px) {
-      .nav-links { display: flex; flex-wrap: wrap; justify-content: center; gap: 1.5rem; margin-top: 1rem; }
-      .nav-links a { margin: 0; }
-      .hero h1 { font-size: 4.8rem; }
-      .lang-toggle { top: 1rem; right: 2vw; padding: 0.5rem 1rem; font-size: 0.75rem; }
-      .trading-chart { height: 380px; padding: 1.4rem; }
+    /* Mobile Menu */
+    @media (max-width: 768px) {
+      .mobile-menu-toggle {
+        display: block;
+      }
+      
+      .nav-links {
+        position: fixed;
+        top: 70px;
+        left: 0;
+        right: 0;
+        background: rgba(10,14,23,0.98);
+        backdrop-filter: blur(20px);
+        flex-direction: column;
+        padding: 2rem 0;
+        gap: 1.5rem;
+        border-bottom: 1px solid rgba(0,240,255,0.2);
+        transform: translateY(-100%);
+        opacity: 0;
+        visibility: hidden;
+        transition: all 0.3s ease;
+        z-index: 999;
+      }
+      
+      .nav-links.active {
+        transform: translateY(0);
+        opacity: 1;
+        visibility: visible;
+      }
+      
+      .nav-links a {
+        font-size: 1rem;
+        padding: 0.8rem 2rem;
+        width: 100%;
+        text-align: center;
+        display: block;
+      }
+      
+      .skip-link {
+        display: none;
+      }
+      
+      .logo {
+        font-size: 1.6rem;
+        letter-spacing: 2px;
+      }
+      
+      .lang-toggle {
+        top: 1rem;
+        right: 1rem;
+        padding: 0.5rem 0.8rem;
+        font-size: 0.7rem;
+      }
+      
+      .hero {
+        padding: 6rem 0 3rem;
+        min-height: auto;
+      }
+      
+      .hero h1 {
+        font-size: clamp(2.5rem, 10vw, 4.5rem);
+        line-height: 1.1;
+      }
+      
+      .hero .subtitle {
+        font-size: 1.1rem;
+        margin: 1.5rem 0 2.5rem;
+      }
+      
+      .btn-neon {
+        padding: 0.9rem 2rem;
+        font-size: 0.95rem;
+        width: 100%;
+        max-width: 280px;
+      }
+      
+      section {
+        padding: 5rem 0;
+      }
+      
+      h2.section-title {
+        font-size: clamp(2rem, 8vw, 3.5rem);
+        margin-bottom: 2rem;
+      }
+      
+      .features-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+        margin-top: 3rem;
+      }
+      
+      .feature-card {
+        padding: 2rem 1.5rem;
+      }
+      
+      .feature-card h3 {
+        font-size: 1.3rem;
+      }
+      
+      .contact-form {
+        padding: 2rem 1.5rem;
+        margin-top: 2rem;
+      }
+      
+      .form-group {
+        margin-bottom: 1.5rem;
+      }
+      
+      .container {
+        padding: 0 4vw;
+      }
+    }
+    
+    @media (max-width: 480px) {
+      .hero h1 {
+        font-size: 2.2rem;
+      }
+      
+      .hero .subtitle {
+        font-size: 1rem;
+      }
+      
+      .logo {
+        font-size: 1.4rem;
+      }
+      
+      .btn-neon {
+        padding: 0.8rem 1.5rem;
+        font-size: 0.85rem;
+      }
+    }
+    
+    @media (min-width: 769px) and (max-width: 1200px) {
+      .hero-content {
+        grid-template-columns: 1fr;
+        gap: 3rem;
+      }
+      
+      .features-grid {
+        grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      }
     }
   </style>
+  
+  <!-- Structured Data (JSON-LD) for SEO -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": "WIA-Software",
+    "description": "Next-generation algorithmic trading infrastructure. HFT bots, quantitative platforms, sub-millisecond execution.",
+    "url": "https://wia-software.com",
+    "logo": "https://wia-software.com/logo.png",
+    "sameAs": [],
+    "contactPoint": {
+      "@type": "ContactPoint",
+      "contactType": "Sales",
+      "areaServed": "Global"
+    },
+    "offers": {
+      "@type": "Offer",
+      "itemOffered": {
+        "@type": "Service",
+        "name": "Trading Software Development",
+        "description": "High-frequency trading systems, algorithmic trading platforms, and quantitative trading solutions"
+      }
+    }
+  }
+  </script>
 </head>
 <body>
 
@@ -547,17 +784,20 @@
   <div class="container">
     <nav>
       <div class="logo">WIA-SOFTWARE</div>
-      <div class="nav-links">
-        <a href="#inicio" data-lang-es="INICIO" data-lang-en="HOME">INICIO</a>
-        <a href="#servicios" data-lang-es="SERVICIOS" data-lang-en="SERVICES">SERVICIOS</a>
-        <a href="#systems" data-lang-es="SISTEMAS" data-lang-en="SYSTEMS">SISTEMAS</a>
-        <a href="#contact" data-lang-es="CONTACTO" data-lang-en="CONTACT">CONTACTO</a>
+      <button class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Toggle menu" onclick="toggleMobileMenu()">☰</button>
+      <div class="nav-links" id="navLinks">
+        <a href="#inicio" data-lang-es="INICIO" data-lang-en="HOME" onclick="closeMobileMenu()">INICIO</a>
+        <a href="#servicios" data-lang-es="SERVICIOS" data-lang-en="SERVICES" onclick="closeMobileMenu()">SERVICIOS</a>
+        <a href="#systems" data-lang-es="SISTEMAS" data-lang-en="SYSTEMS" onclick="closeMobileMenu()">SISTEMAS</a>
+        <a href="#contact" data-lang-es="CONTACTO" data-lang-en="CONTACT" onclick="closeMobileMenu()">CONTACTO</a>
       </div>
     </nav>
   </div>
-  <button class="lang-toggle" id="langToggle" onclick="toggleLanguage()">EN</button>
+  <button class="lang-toggle" id="langToggle" onclick="toggleLanguage()" aria-label="Toggle language">EN</button>
 </header>
 
+<main>
+<a href="#inicio" class="skip-link">Saltar al contenido principal</a>
 <section id="inicio" class="hero">
   <div class="container">
     <div class="hero-content">
@@ -714,10 +954,36 @@
     </p>
   </div>
 </footer>
+</main>
 
 <script>
   let currentLang = 'es';
 
+  // Mobile menu toggle
+  function toggleMobileMenu() {
+    const navLinks = document.getElementById('navLinks');
+    const menuToggle = document.getElementById('mobileMenuToggle');
+    navLinks.classList.toggle('active');
+    menuToggle.classList.toggle('active');
+  }
+  
+  function closeMobileMenu() {
+    const navLinks = document.getElementById('navLinks');
+    const menuToggle = document.getElementById('mobileMenuToggle');
+    navLinks.classList.remove('active');
+    menuToggle.classList.remove('active');
+  }
+  
+  // Close mobile menu when clicking outside
+  document.addEventListener('click', (e) => {
+    const nav = document.querySelector('nav');
+    const navLinks = document.getElementById('navLinks');
+    const menuToggle = document.getElementById('mobileMenuToggle');
+    if (navLinks && navLinks.classList.contains('active') && !nav.contains(e.target)) {
+      closeMobileMenu();
+    }
+  });
+  
   function toggleLanguage() {
     currentLang = currentLang === 'es' ? 'en' : 'es';
     const langToggle = document.getElementById('langToggle');
