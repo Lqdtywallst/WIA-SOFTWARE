@@ -271,10 +271,37 @@
       font-size: 0.9rem;
     }
 
+    .lang-toggle {
+      position: fixed;
+      top: 1.4rem;
+      right: 5vw;
+      z-index: 1001;
+      background: rgba(0,240,255,0.1);
+      border: 2px solid var(--neon-blue);
+      color: var(--neon-blue);
+      padding: 0.6rem 1.2rem;
+      font-family: 'Orbitron', sans-serif;
+      font-weight: 700;
+      font-size: 0.85rem;
+      cursor: pointer;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      transition: all 0.3s;
+      box-shadow: 0 0 15px rgba(0,240,255,0.3);
+    }
+
+    .lang-toggle:hover {
+      background: var(--neon-blue);
+      color: #000;
+      box-shadow: 0 0 25px var(--neon-blue);
+      transform: translateY(-2px);
+    }
+
     @media (max-width: 900px) {
       .nav-links { display: flex; flex-wrap: wrap; justify-content: center; gap: 1.5rem; margin-top: 1rem; }
       .nav-links a { margin: 0; }
       .hero h1 { font-size: 4.8rem; }
+      .lang-toggle { top: 1rem; right: 2vw; padding: 0.5rem 1rem; font-size: 0.75rem; }
     }
   </style>
 </head>
@@ -285,24 +312,25 @@
     <nav>
       <div class="logo">WIA-SOFTWARE</div>
       <div class="nav-links">
-        <a href="#inicio">INICIO</a>
-        <a href="#servicios">SERVICIOS</a>
-        <a href="#systems">SISTEMAS</a>
-        <a href="#contact">CONTACTO</a>
+        <a href="#inicio" data-lang-es="INICIO" data-lang-en="HOME">INICIO</a>
+        <a href="#servicios" data-lang-es="SERVICIOS" data-lang-en="SERVICES">SERVICIOS</a>
+        <a href="#systems" data-lang-es="SISTEMAS" data-lang-en="SYSTEMS">SISTEMAS</a>
+        <a href="#contact" data-lang-es="CONTACTO" data-lang-en="CONTACT">CONTACTO</a>
       </div>
     </nav>
   </div>
+  <button class="lang-toggle" id="langToggle" onclick="toggleLanguage()">EN</button>
 </header>
 
 <section id="inicio" class="hero">
   <div class="container">
     <div class="hero-content">
       <h1>EXECUTION LAYER<br>REDEFINED</h1>
-      <p class="subtitle">Infraestructura algorítmica de próxima generación. Bots de alta frecuencia. Plataformas cuantitativas. Latencia sub-milisegundo. Cero excusas.</p>
+      <p class="subtitle" data-lang-es="Infraestructura algorítmica de próxima generación. Bots de alta frecuencia. Plataformas cuantitativas. Latencia sub-milisegundo. Cero excusas." data-lang-en="Next-generation algorithmic infrastructure. High-frequency bots. Quantitative platforms. Sub-millisecond latency. No excuses.">Infraestructura algorítmica de próxima generación. Bots de alta frecuencia. Plataformas cuantitativas. Latencia sub-milisegundo. Cero excusas.</p>
       
       <div style="margin-top: 4rem; display:flex; gap:2rem; flex-wrap:wrap;">
-        <a href="#contact" class="btn-neon">SOLICITAR ACCESO</a>
-        <a href="#systems" class="btn-neon purple">VER SISTEMAS</a>
+        <a href="#contact" class="btn-neon" data-lang-es="SOLICITAR ACCESO" data-lang-en="REQUEST ACCESS">SOLICITAR ACCESO</a>
+        <a href="#systems" class="btn-neon purple" data-lang-es="VER SISTEMAS" data-lang-en="VIEW SYSTEMS">VER SISTEMAS</a>
       </div>
     </div>
   </div>
@@ -310,48 +338,48 @@
 
 <section id="servicios">
   <div class="container">
-    <h2 class="section-title">SERVICIOS</h2>
+    <h2 class="section-title" data-lang-es="SERVICIOS" data-lang-en="SERVICES">SERVICIOS</h2>
     
     <div class="features-grid">
       <div class="feature-card">
-        <h3>DESARROLLO DE PLATAFORMAS DE TRADING</h3>
-        <p>Plataformas personalizadas • Interfaz de usuario avanzada • Multi-activo • Integración con múltiples exchanges • Real-time data streaming</p>
+        <h3 data-lang-es="DESARROLLO DE PLATAFORMAS DE TRADING" data-lang-en="TRADING PLATFORM DEVELOPMENT">DESARROLLO DE PLATAFORMAS DE TRADING</h3>
+        <p data-lang-es="Plataformas personalizadas • Interfaz de usuario avanzada • Multi-activo • Integración con múltiples exchanges • Real-time data streaming" data-lang-en="Custom platforms • Advanced user interface • Multi-asset • Integration with multiple exchanges • Real-time data streaming">Plataformas personalizadas • Interfaz de usuario avanzada • Multi-activo • Integración con múltiples exchanges • Real-time data streaming</p>
       </div>
       <div class="feature-card">
-        <h3>SISTEMAS DE EJECUCIÓN ALGORÍTMICA</h3>
-        <p>Algoritmos de trading automatizados • Smart order routing • TWAP/VWAP execution • Iceberg orders • Minimización de impacto en mercado</p>
+        <h3 data-lang-es="SISTEMAS DE EJECUCIÓN ALGORÍTMICA" data-lang-en="ALGORITHMIC EXECUTION SYSTEMS">SISTEMAS DE EJECUCIÓN ALGORÍTMICA</h3>
+        <p data-lang-es="Algoritmos de trading automatizados • Smart order routing • TWAP/VWAP execution • Iceberg orders • Minimización de impacto en mercado" data-lang-en="Automated trading algorithms • Smart order routing • TWAP/VWAP execution • Iceberg orders • Market impact minimization">Algoritmos de trading automatizados • Smart order routing • TWAP/VWAP execution • Iceberg orders • Minimización de impacto en mercado</p>
       </div>
       <div class="feature-card">
-        <h3>APIS Y CONECTIVIDAD</h3>
-        <p>Integración con brokers y exchanges • APIs REST/WebSocket • Protocolos FIX/ITCH • Co-location services • Low-latency connectivity</p>
+        <h3 data-lang-es="APIS Y CONECTIVIDAD" data-lang-en="APIS & CONNECTIVITY">APIS Y CONECTIVIDAD</h3>
+        <p data-lang-es="Integración con brokers y exchanges • APIs REST/WebSocket • Protocolos FIX/ITCH • Co-location services • Low-latency connectivity" data-lang-en="Integration with brokers and exchanges • REST/WebSocket APIs • FIX/ITCH protocols • Co-location services • Low-latency connectivity">Integración con brokers y exchanges • APIs REST/WebSocket • Protocolos FIX/ITCH • Co-location services • Low-latency connectivity</p>
       </div>
       <div class="feature-card">
-        <h3>SISTEMAS DE BACKTESTING</h3>
-        <p>Backtesting histórico avanzado • Walk-forward analysis • Monte Carlo simulation • Optimización de parámetros • Paper trading environments</p>
+        <h3 data-lang-es="SISTEMAS DE BACKTESTING" data-lang-en="BACKTESTING SYSTEMS">SISTEMAS DE BACKTESTING</h3>
+        <p data-lang-es="Backtesting histórico avanzado • Walk-forward analysis • Monte Carlo simulation • Optimización de parámetros • Paper trading environments" data-lang-en="Advanced historical backtesting • Walk-forward analysis • Monte Carlo simulation • Parameter optimization • Paper trading environments">Backtesting histórico avanzado • Walk-forward analysis • Monte Carlo simulation • Optimización de parámetros • Paper trading environments</p>
       </div>
       <div class="feature-card">
-        <h3>DASHBOARDS Y VISUALIZACIÓN</h3>
-        <p>Dashboards en tiempo real • Análisis técnico avanzado • Heatmaps de mercado • Risk metrics visualization • Performance analytics</p>
+        <h3 data-lang-es="DASHBOARDS Y VISUALIZACIÓN" data-lang-en="DASHBOARDS & VISUALIZATION">DASHBOARDS Y VISUALIZACIÓN</h3>
+        <p data-lang-es="Dashboards en tiempo real • Análisis técnico avanzado • Heatmaps de mercado • Risk metrics visualization • Performance analytics" data-lang-en="Real-time dashboards • Advanced technical analysis • Market heatmaps • Risk metrics visualization • Performance analytics">Dashboards en tiempo real • Análisis técnico avanzado • Heatmaps de mercado • Risk metrics visualization • Performance analytics</p>
       </div>
       <div class="feature-card">
-        <h3>BOTS DE TRADING AUTOMATIZADOS</h3>
-        <p>Grid trading bots • Arbitrage bots • Market making bots • DCA bots • Strategy automation • Multi-exchange coordination</p>
+        <h3 data-lang-es="BOTS DE TRADING AUTOMATIZADOS" data-lang-en="AUTOMATED TRADING BOTS">BOTS DE TRADING AUTOMATIZADOS</h3>
+        <p data-lang-es="Grid trading bots • Arbitrage bots • Market making bots • DCA bots • Strategy automation • Multi-exchange coordination" data-lang-en="Grid trading bots • Arbitrage bots • Market making bots • DCA bots • Strategy automation • Multi-exchange coordination">Grid trading bots • Arbitrage bots • Market making bots • DCA bots • Strategy automation • Multi-exchange coordination</p>
       </div>
       <div class="feature-card">
-        <h3>GESTIÓN DE RIESGO Y COMPLIANCE</h3>
-        <p>Risk management systems • Position sizing algorithms • Stop-loss automation • Compliance monitoring • Audit trails • Regulatory reporting</p>
+        <h3 data-lang-es="GESTIÓN DE RIESGO Y COMPLIANCE" data-lang-en="RISK MANAGEMENT & COMPLIANCE">GESTIÓN DE RIESGO Y COMPLIANCE</h3>
+        <p data-lang-es="Risk management systems • Position sizing algorithms • Stop-loss automation • Compliance monitoring • Audit trails • Regulatory reporting" data-lang-en="Risk management systems • Position sizing algorithms • Stop-loss automation • Compliance monitoring • Audit trails • Regulatory reporting">Risk management systems • Position sizing algorithms • Stop-loss automation • Compliance monitoring • Audit trails • Regulatory reporting</p>
       </div>
       <div class="feature-card">
-        <h3>ANÁLISIS DE MERCADO Y SEÑALES</h3>
-        <p>Análisis técnico automatizado • Machine learning para señales • Sentiment analysis • Market data processing • Pattern recognition</p>
+        <h3 data-lang-es="ANÁLISIS DE MERCADO Y SEÑALES" data-lang-en="MARKET ANALYSIS & SIGNALS">ANÁLISIS DE MERCADO Y SEÑALES</h3>
+        <p data-lang-es="Análisis técnico automatizado • Machine learning para señales • Sentiment analysis • Market data processing • Pattern recognition" data-lang-en="Automated technical analysis • Machine learning for signals • Sentiment analysis • Market data processing • Pattern recognition">Análisis técnico automatizado • Machine learning para señales • Sentiment analysis • Market data processing • Pattern recognition</p>
       </div>
       <div class="feature-card">
-        <h3>INFRAESTRUCTURA Y DEVOPS</h3>
-        <p>Cloud infrastructure setup • High-availability systems • Monitoring y alerting • CI/CD pipelines • Disaster recovery • Scalability solutions</p>
+        <h3 data-lang-es="INFRAESTRUCTURA Y DEVOPS" data-lang-en="INFRASTRUCTURE & DEVOPS">INFRAESTRUCTURA Y DEVOPS</h3>
+        <p data-lang-es="Cloud infrastructure setup • High-availability systems • Monitoring y alerting • CI/CD pipelines • Disaster recovery • Scalability solutions" data-lang-en="Cloud infrastructure setup • High-availability systems • Monitoring and alerting • CI/CD pipelines • Disaster recovery • Scalability solutions">Cloud infrastructure setup • High-availability systems • Monitoring y alerting • CI/CD pipelines • Disaster recovery • Scalability solutions</p>
       </div>
       <div class="feature-card">
-        <h3>CONSULTORÍA Y ESTRATEGIA</h3>
-        <p>Consultoría en trading algorítmico • Diseño de estrategias • Optimización de sistemas existentes • Training y soporte técnico</p>
+        <h3 data-lang-es="CONSULTORÍA Y ESTRATEGIA" data-lang-en="CONSULTING & STRATEGY">CONSULTORÍA Y ESTRATEGIA</h3>
+        <p data-lang-es="Consultoría en trading algorítmico • Diseño de estrategias • Optimización de sistemas existentes • Training y soporte técnico" data-lang-en="Algorithmic trading consulting • Strategy design • Optimization of existing systems • Training and technical support">Consultoría en trading algorítmico • Diseño de estrategias • Optimización de sistemas existentes • Training y soporte técnico</p>
       </div>
     </div>
   </div>
@@ -359,32 +387,32 @@
 
 <section id="systems">
   <div class="container">
-    <h2 class="section-title">SISTEMAS OPERATIVOS</h2>
+    <h2 class="section-title" data-lang-es="SISTEMAS OPERATIVOS" data-lang-en="OPERATING SYSTEMS">SISTEMAS OPERATIVOS</h2>
     
     <div class="features-grid">
       <div class="feature-card">
         <h3>HFT CORE</h3>
-        <p>Ejecución sub-milisegundo • FIX/ITCH • Co-location • FPGA ready • Order book reconstruction</p>
+        <p data-lang-es="Ejecución sub-milisegundo • FIX/ITCH • Co-location • FPGA ready • Order book reconstruction" data-lang-en="Sub-millisecond execution • FIX/ITCH • Co-location • FPGA ready • Order book reconstruction">Ejecución sub-milisegundo • FIX/ITCH • Co-location • FPGA ready • Order book reconstruction</p>
       </div>
       <div class="feature-card">
         <h3>ML STRATEGY ENGINE</h3>
-        <p>Modelos reinforcement learning • LSTM/Transformers • Feature store en memoria • Auto-optimization pipeline</p>
+        <p data-lang-es="Modelos reinforcement learning • LSTM/Transformers • Feature store en memoria • Auto-optimization pipeline" data-lang-en="Reinforcement learning models • LSTM/Transformers • In-memory feature store • Auto-optimization pipeline">Modelos reinforcement learning • LSTM/Transformers • Feature store en memoria • Auto-optimization pipeline</p>
       </div>
       <div class="feature-card">
         <h3>GRID & ARBITRAGE</h3>
-        <p>Triangular / statistical arb • Cross-exchange latency arbitrage • Adaptive grid with volatility clustering</p>
+        <p data-lang-es="Triangular / statistical arb • Cross-exchange latency arbitrage • Adaptive grid with volatility clustering" data-lang-en="Triangular / statistical arb • Cross-exchange latency arbitrage • Adaptive grid with volatility clustering">Triangular / statistical arb • Cross-exchange latency arbitrage • Adaptive grid with volatility clustering</p>
       </div>
       <div class="feature-card">
         <h3>CUSTOM DASHBOARD</h3>
-        <p>Multi-broker aggregation • Real-time risk engine • Heatmaps de latencia • Dark pool monitoring</p>
+        <p data-lang-es="Multi-broker aggregation • Real-time risk engine • Heatmaps de latencia • Dark pool monitoring" data-lang-en="Multi-broker aggregation • Real-time risk engine • Latency heatmaps • Dark pool monitoring">Multi-broker aggregation • Real-time risk engine • Heatmaps de latencia • Dark pool monitoring</p>
       </div>
       <div class="feature-card">
         <h3>BACKTEST HYPERSCALE</h3>
-        <p>Tick-level • Walk-forward • Monte Carlo • Genetic optimization • Cloud bursting</p>
+        <p data-lang-es="Tick-level • Walk-forward • Monte Carlo • Genetic optimization • Cloud bursting" data-lang-en="Tick-level • Walk-forward • Monte Carlo • Genetic optimization • Cloud bursting">Tick-level • Walk-forward • Monte Carlo • Genetic optimization • Cloud bursting</p>
       </div>
       <div class="feature-card">
         <h3>ZERO-TOUCH DEPLOY</h3>
-        <p>GitOps workflow • Docker/K8s • Canary releases • Failover automático • Audit trail inmutable</p>
+        <p data-lang-es="GitOps workflow • Docker/K8s • Canary releases • Failover automático • Audit trail inmutable" data-lang-en="GitOps workflow • Docker/K8s • Canary releases • Automatic failover • Immutable audit trail">GitOps workflow • Docker/K8s • Canary releases • Failover automático • Audit trail inmutable</p>
       </div>
     </div>
   </div>
@@ -395,12 +423,39 @@
     <p style="font-size:1.4rem; margin-bottom:1.5rem; color:var(--neon-blue); text-shadow:0 0 15px;">
       WIA-SOFTWARE · NEXT EXECUTION LAYER
     </p>
-    <p>Desarrollo propietario • Acceso restringido • Solo para instituciones y traders serios</p>
+    <p data-lang-es="Desarrollo propietario • Acceso restringido • Solo para instituciones y traders serios" data-lang-en="Proprietary development • Restricted access • Only for institutions and serious traders">Desarrollo propietario • Acceso restringido • Solo para instituciones y traders serios</p>
     <p style="margin-top:3rem; color:#4a7cff; font-size:0.9rem;">
       © 2025 WIA-SOFTWARE — ALL RIGHTS RESERVED — RUN THE EDGE
     </p>
   </div>
 </footer>
+
+<script>
+  let currentLang = 'es';
+
+  function toggleLanguage() {
+    currentLang = currentLang === 'es' ? 'en' : 'es';
+    const langToggle = document.getElementById('langToggle');
+    langToggle.textContent = currentLang === 'es' ? 'EN' : 'ES';
+    
+    // Cambiar atributo lang del HTML
+    document.documentElement.lang = currentLang;
+    
+    // Actualizar todos los elementos con data-lang-es y data-lang-en
+    const elements = document.querySelectorAll('[data-lang-es], [data-lang-en]');
+    elements.forEach(element => {
+      if (currentLang === 'es') {
+        if (element.hasAttribute('data-lang-es')) {
+          element.textContent = element.getAttribute('data-lang-es');
+        }
+      } else {
+        if (element.hasAttribute('data-lang-en')) {
+          element.textContent = element.getAttribute('data-lang-en');
+        }
+      }
+    });
+  }
+</script>
 
 </body>
 </html>
