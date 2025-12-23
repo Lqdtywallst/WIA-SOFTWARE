@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>WIA-Software · Next-Gen Trading Systems</title>
+  <meta name="description" content="Infraestructura algorítmica. Bots HFT. Plataformas cuantitativas. Ejecución sub-milisegundo."/>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg: #0a0e17;
+      --dark: #000814;
+      --neon-blue: #00f0ff;
+      --neon-purple: #c300ff;
+      --neon-green: #39ff14;
+      --text: #e0f7ff;
+      --text-dim: #8ac4ff;
+      --card: rgba(15, 23, 42, 0.65);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Roboto Mono', monospace;
+      line-height: 1.5;
+      overflow-x: hidden;
+      background-image: 
+        radial-gradient(circle at 20% 30%, rgba(0,240,255,0.08) 0%, transparent 25%),
+        radial-gradient(circle at 80% 70%, rgba(195,0,255,0.06) 0%, transparent 30%);
+      background-attachment: fixed;
+    }
+
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 0 5vw;
+    }
+
+    header {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      z-index: 1000;
+      background: rgba(10,14,23,0.75);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(0,240,255,0.15);
+    }
+
+    nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.4rem 0;
+    }
+
+    .logo {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 2.2rem;
+      font-weight: 900;
+      background: linear-gradient(90deg, var(--neon-blue), var(--neon-purple));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      letter-spacing: 3px;
+      text-shadow: 0 0 15px rgba(0,240,255,0.6);
+    }
+
+    .nav-links a {
+      color: var(--text-dim);
+      text-decoration: none;
+      margin-left: 3.5rem;
+      font-size: 0.95rem;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      transition: all 0.3s;
+      position: relative;
+    }
+
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      width: 0;
+      height: 2px;
+      bottom: -6px;
+      left: 0;
+      background: var(--neon-blue);
+      box-shadow: 0 0 10px var(--neon-blue);
+      transition: width 0.4s;
+    }
+
+    .nav-links a:hover {
+      color: var(--neon-blue);
+      text-shadow: 0 0 12px var(--neon-blue);
+    }
+
+    .nav-links a:hover::after {
+      width: 100%;
+    }
+
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      padding: 8rem 0 4rem;
+      background: linear-gradient(135deg, #0a0e17 0%, #000814 100%);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><text x="10" y="50" font-size="12" fill="rgba(0,240,255,0.03)">WIA×ALGO×EXEC</text></svg>') repeat;
+      opacity: 0.15;
+      pointer-events: none;
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      max-width: 1100px;
+    }
+
+    .hero h1 {
+      font-family: 'Orbitron', sans-serif;
+      font-size: clamp(3.8rem, 8vw, 7.2rem);
+      font-weight: 900;
+      line-height: 0.92;
+      background: linear-gradient(90deg, #00f0ff, #c300ff, #39ff14, #00f0ff);
+      background-size: 400%;
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      animation: glow 8s ease-in-out infinite;
+    }
+
+    @keyframes glow {
+      0%,100% { background-position: 0% 50%; }
+      50%     { background-position: 100% 50%; }
+    }
+
+    .hero .subtitle {
+      font-size: 1.5rem;
+      color: var(--text-dim);
+      margin: 2rem 0 3.5rem;
+      max-width: 820px;
+      letter-spacing: 1.2px;
+    }
+
+    .btn-neon {
+      display: inline-block;
+      padding: 1.1rem 2.8rem;
+      font-family: 'Orbitron', sans-serif;
+      font-weight: 700;
+      font-size: 1.1rem;
+      text-decoration: none;
+      color: var(--neon-blue);
+      border: 2px solid var(--neon-blue);
+      border-radius: 0;
+      background: rgba(0,240,255,0.08);
+      box-shadow: 0 0 20px rgba(0,240,255,0.4);
+      transition: all 0.4s;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+    }
+
+    .btn-neon:hover {
+      background: var(--neon-blue);
+      color: #000;
+      box-shadow: 0 0 40px var(--neon-blue);
+      transform: translateY(-3px);
+    }
+
+    .btn-neon.purple {
+      border-color: var(--neon-purple);
+      color: var(--neon-purple);
+      box-shadow: 0 0 20px rgba(195,0,255,0.4);
+    }
+
+    .btn-neon.purple:hover {
+      background: var(--neon-purple);
+      color: #000;
+      box-shadow: 0 0 40px var(--neon-purple);
+    }
+
+    section {
+      padding: 10rem 0;
+    }
+
+    h2.section-title {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 4rem;
+      text-align: center;
+      margin-bottom: 1.5rem;
+      background: linear-gradient(90deg, var(--neon-blue), var(--neon-purple));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+      gap: 2.5rem;
+      margin-top: 5rem;
+    }
+
+    .feature-card {
+      background: var(--card);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(0,240,255,0.15);
+      border-radius: 8px;
+      padding: 2.8rem;
+      transition: all 0.4s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .feature-card::before {
+      content: '';
+      position: absolute;
+      top: -50%; left: -50%; right: -50%; bottom: -50%;
+      background: radial-gradient(circle at 50% 50%, rgba(0,240,255,0.15), transparent 60%);
+      opacity: 0;
+      transition: opacity 0.6s;
+    }
+
+    .feature-card:hover::before {
+      opacity: 1;
+    }
+
+    .feature-card:hover {
+      transform: translateY(-12px);
+      border-color: var(--neon-blue);
+      box-shadow: 0 20px 60px rgba(0,240,255,0.2);
+    }
+
+    .feature-card h3 {
+      color: var(--neon-blue);
+      font-size: 1.6rem;
+      margin-bottom: 1.2rem;
+      font-weight: 700;
+    }
+
+    .feature-card p {
+      color: var(--text-dim);
+      font-size: 0.98rem;
+    }
+
+    footer {
+      background: var(--dark);
+      padding: 6rem 0 3rem;
+      border-top: 1px solid rgba(0,240,255,0.1);
+      text-align: center;
+    }
+
+    footer p {
+      color: #5a8cff;
+      font-size: 0.9rem;
+    }
+
+    @media (max-width: 900px) {
+      .nav-links { display: flex; flex-wrap: wrap; justify-content: center; gap: 1.5rem; margin-top: 1rem; }
+      .nav-links a { margin: 0; }
+      .hero h1 { font-size: 4.8rem; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="container">
+    <nav>
+      <div class="logo">WIA-SOFTWARE</div>
+      <div class="nav-links">
+        <a href="#inicio">INICIO</a>
+        <a href="#servicios">SERVICIOS</a>
+        <a href="#systems">SISTEMAS</a>
+        <a href="#contact">CONTACTO</a>
+      </div>
+    </nav>
+  </div>
+</header>
+
+<section id="inicio" class="hero">
+  <div class="container">
+    <div class="hero-content">
+      <h1>EXECUTION LAYER<br>REDEFINED</h1>
+      <p class="subtitle">Infraestructura algorítmica de próxima generación. Bots de alta frecuencia. Plataformas cuantitativas. Latencia sub-milisegundo. Cero excusas.</p>
+      
+      <div style="margin-top: 4rem; display:flex; gap:2rem; flex-wrap:wrap;">
+        <a href="#contact" class="btn-neon">SOLICITAR ACCESO</a>
+        <a href="#systems" class="btn-neon purple">VER SISTEMAS</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="servicios">
+  <div class="container">
+    <h2 class="section-title">SERVICIOS</h2>
+    
+    <div class="features-grid">
+      <div class="feature-card">
+        <h3>DESARROLLO DE PLATAFORMAS DE TRADING</h3>
+        <p>Plataformas personalizadas • Interfaz de usuario avanzada • Multi-activo • Integración con múltiples exchanges • Real-time data streaming</p>
+      </div>
+      <div class="feature-card">
+        <h3>SISTEMAS DE EJECUCIÓN ALGORÍTMICA</h3>
+        <p>Algoritmos de trading automatizados • Smart order routing • TWAP/VWAP execution • Iceberg orders • Minimización de impacto en mercado</p>
+      </div>
+      <div class="feature-card">
+        <h3>APIS Y CONECTIVIDAD</h3>
+        <p>Integración con brokers y exchanges • APIs REST/WebSocket • Protocolos FIX/ITCH • Co-location services • Low-latency connectivity</p>
+      </div>
+      <div class="feature-card">
+        <h3>SISTEMAS DE BACKTESTING</h3>
+        <p>Backtesting histórico avanzado • Walk-forward analysis • Monte Carlo simulation • Optimización de parámetros • Paper trading environments</p>
+      </div>
+      <div class="feature-card">
+        <h3>DASHBOARDS Y VISUALIZACIÓN</h3>
+        <p>Dashboards en tiempo real • Análisis técnico avanzado • Heatmaps de mercado • Risk metrics visualization • Performance analytics</p>
+      </div>
+      <div class="feature-card">
+        <h3>BOTS DE TRADING AUTOMATIZADOS</h3>
+        <p>Grid trading bots • Arbitrage bots • Market making bots • DCA bots • Strategy automation • Multi-exchange coordination</p>
+      </div>
+      <div class="feature-card">
+        <h3>GESTIÓN DE RIESGO Y COMPLIANCE</h3>
+        <p>Risk management systems • Position sizing algorithms • Stop-loss automation • Compliance monitoring • Audit trails • Regulatory reporting</p>
+      </div>
+      <div class="feature-card">
+        <h3>ANÁLISIS DE MERCADO Y SEÑALES</h3>
+        <p>Análisis técnico automatizado • Machine learning para señales • Sentiment analysis • Market data processing • Pattern recognition</p>
+      </div>
+      <div class="feature-card">
+        <h3>INFRAESTRUCTURA Y DEVOPS</h3>
+        <p>Cloud infrastructure setup • High-availability systems • Monitoring y alerting • CI/CD pipelines • Disaster recovery • Scalability solutions</p>
+      </div>
+      <div class="feature-card">
+        <h3>CONSULTORÍA Y ESTRATEGIA</h3>
+        <p>Consultoría en trading algorítmico • Diseño de estrategias • Optimización de sistemas existentes • Training y soporte técnico</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="systems">
+  <div class="container">
+    <h2 class="section-title">SISTEMAS OPERATIVOS</h2>
+    
+    <div class="features-grid">
+      <div class="feature-card">
+        <h3>HFT CORE</h3>
+        <p>Ejecución sub-milisegundo • FIX/ITCH • Co-location • FPGA ready • Order book reconstruction</p>
+      </div>
+      <div class="feature-card">
+        <h3>ML STRATEGY ENGINE</h3>
+        <p>Modelos reinforcement learning • LSTM/Transformers • Feature store en memoria • Auto-optimization pipeline</p>
+      </div>
+      <div class="feature-card">
+        <h3>GRID & ARBITRAGE</h3>
+        <p>Triangular / statistical arb • Cross-exchange latency arbitrage • Adaptive grid with volatility clustering</p>
+      </div>
+      <div class="feature-card">
+        <h3>CUSTOM DASHBOARD</h3>
+        <p>Multi-broker aggregation • Real-time risk engine • Heatmaps de latencia • Dark pool monitoring</p>
+      </div>
+      <div class="feature-card">
+        <h3>BACKTEST HYPERSCALE</h3>
+        <p>Tick-level • Walk-forward • Monte Carlo • Genetic optimization • Cloud bursting</p>
+      </div>
+      <div class="feature-card">
+        <h3>ZERO-TOUCH DEPLOY</h3>
+        <p>GitOps workflow • Docker/K8s • Canary releases • Failover automático • Audit trail inmutable</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer id="contact">
+  <div class="container">
+    <p style="font-size:1.4rem; margin-bottom:1.5rem; color:var(--neon-blue); text-shadow:0 0 15px;">
+      WIA-SOFTWARE · NEXT EXECUTION LAYER
+    </p>
+    <p>Desarrollo propietario • Acceso restringido • Solo para instituciones y traders serios</p>
+    <p style="margin-top:3rem; color:#4a7cff; font-size:0.9rem;">
+      © 2025 WIA-SOFTWARE — ALL RIGHTS RESERVED — RUN THE EDGE
+    </p>
+  </div>
+</footer>
+
+</body>
+</html>
+
